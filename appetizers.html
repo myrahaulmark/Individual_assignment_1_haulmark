@@ -1,0 +1,144 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Appetizers - La Mise en Place</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<style>
+			/* Additional CSS for Category Pages (Optional) */
+			.recipe-list {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+				gap: 20px;
+				margin-top: 20px;
+			}
+
+			.recipe-card {
+				border: 1px solid #ddd;
+				padding: 15px;
+				border-radius: 8px;
+				background: #f9f9f9;
+				transition: box-shadow 0.3s;
+			}
+
+			.recipe-card:hover {
+				box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+			}
+
+			.recipe-card h3 {
+				margin-top: 0;
+			}
+
+			.recipe-card img {
+				width: 100%;
+				height: auto;
+				border-radius: 8px;
+			}
+		</style>
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+		<div id="wrapper">
+
+			<!-- Main -->
+			<div id="main">
+				<div class="inner">
+
+					<!-- Header -->
+					<header id="header">
+						<a href="index.html" class="logo"><strong>La Mise en Place</strong> Recipe Database</a>
+						<ul class="icons">
+							<li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
+							<li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
+							<li><a href="#" class="icon brands fa-snapchat-ghost"><span class="label">Snapchat</span></a></li>
+							<li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
+							<li><a href="#" class="icon brands fa-medium-m"><span class="label">Medium</span></a></li>
+						</ul>
+					</header>
+
+					<!-- Content -->
+					<section>
+						<header class="main">
+							<h1>Appetizers</h1>
+						</header>
+						
+						<p>Discover a variety of delicious appetizer recipes to start your meal off right. Explore our collection below!</p>
+
+						<!-- Recipe List -->
+						<div class="recipe-list">
+							<div class="recipe-card">
+								<img src="images/recipe1.jpg" alt="Bruschetta">
+								<h3>Bruschetta</h3>
+								<p>A classic Italian appetizer made with tomatoes, basil, and olive oil on toasted bread.</p>
+								<a href="recipe1.html" class="button primary small">View Recipe</a>
+							</div>
+							<div class="recipe-card">
+								<img src="images/recipe2.jpg" alt="Stuffed Mushrooms">
+								<h3>Stuffed Mushrooms</h3>
+								<p>Delicious mushrooms filled with a creamy cheese and herb stuffing.</p>
+								<a href="recipe2.html" class="button primary small">View Recipe</a>
+							</div>
+							<div class="recipe-card">
+								<img src="images/recipe3.jpg" alt="Spring Rolls">
+								<h3>Spring Rolls</h3>
+								<p>Fresh and crispy spring rolls served with a tangy dipping sauce.</p>
+								<a href="recipe3.html" class="button primary small">View Recipe</a>
+							</div>
+						</div>
+
+					</section>
+
+				</div>
+			</div>
+
+			<!-- Sidebar -->
+			<div id="sidebar">
+				<div class="inner">
+					
+					<!-- Search -->
+					<section id="search" class="alt">
+						<form method="post" action="#">
+							<input type="text" name="query" id="query" placeholder="Search" />
+						</form>
+					</section>
+
+					<!-- Menu -->
+					<nav id="menu">
+						<header class="major">
+							<h2>Menu</h2>
+						</header>
+						<ul>
+							<li><a href="index.html">Homepage</a></li>
+							<li><a href="account.html">My Account</a></li>
+							<li><a href="appetizers.html" class="active">Appetizers</a></li>
+							<li>
+								<span class="opener">Categories Submenu</span>
+								<ul>
+									<li><a href="soups.html">Soups</a></li>
+									<li><a href="desserts.html">Desserts</a></li>
+									<li><a href="beef.html">Beef</a></li>
+								</ul>
+							</li>
+						</ul>
+					</nav>
+
+					<!-- Footer -->
+					<footer id="footer">
+						<p class="copyright">&copy; La Mise en Place. All rights reserved.</p>
+					</footer>
+				</div>
+			</div>
+
+		</div>
+
+		<!-- Scripts -->
+		<script src="assets/js/jquery.min.js"></script>
+		<script src="assets/js/browser.min.js"></script>
+		<script src="assets/js/breakpoints.min.js"></script>
+		<script src="assets/js/util.js"></script>
+		<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
