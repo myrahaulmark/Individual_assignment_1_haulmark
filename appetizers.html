@@ -1,22 +1,36 @@
 <!DOCTYPE HTML>
 <html>
 	<head>
-		<title>Recipe - La Mise en Place</title>
+		<title>Appetizers - La Mise en Place</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
 		<style>
-			/* Additional styling for recipe details and reviews */
-			.recipe-container {
+			/* Additional styling */
+			.search-results {
 				margin-top: 20px;
+			}
+
+			.recipe-container {
+				margin-top: 30px;
+			}
+
+			.recipe-card {
+				border: 1px solid #ddd;
+				padding: 10px;
+				border-radius: 8px;
+				margin-bottom: 15px;
+				background: #f9f9f9;
+				cursor: pointer;
+				transition: box-shadow 0.3s;
+			}
+
+			.recipe-card:hover {
+				box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 			}
 
 			.ingredients, .instructions, .reviews {
 				margin-bottom: 30px;
-			}
-
-			.reviews h3 {
-				margin-bottom: 10px;
 			}
 
 			.review {
@@ -25,11 +39,6 @@
 				border-radius: 8px;
 				margin-bottom: 10px;
 				background: #f9f9f9;
-			}
-
-			.review strong {
-				display: block;
-				margin-bottom: 5px;
 			}
 		</style>
 	</head>
@@ -45,48 +54,48 @@
 					<!-- Header -->
 					<header id="header">
 						<a href="index.html" class="logo"><strong>La Mise en Place</strong> Recipe Database</a>
-						<ul class="icons">
-							<li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
-							<li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
-							<li><a href="#" class="icon brands fa-snapchat-ghost"><span class="label">Snapchat</span></a></li>
-							<li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
-							<li><a href="#" class="icon brands fa-medium-m"><span class="label">Medium</span></a></li>
-						</ul>
 					</header>
 
-					<!-- Recipe Content -->
-					<section class="recipe-container">
-						<header class="main">
-							<h1 id="recipe-title">Loading recipe...</h1>
-						</header>
+					<!-- Search Section -->
+					<section>
+						<h1>Appetizers</h1>
+						<p>Search for delicious appetizer recipes based on ingredients, dietary preferences, or keywords.</p>
+						<input type="text" id="search-bar" placeholder="Search appetizers..." />
+						<button id="search-button">Search</button>
+
+						<div class="search-results" id="search-results">
+							<!-- Search results will populate here -->
+						</div>
+					</section>
+
+					<!-- Recipe Display Section -->
+					<section class="recipe-container" id="recipe-container" style="display: none;">
+						<h2 id="recipe-title"></h2>
 						<p id="recipe-description"></p>
 
-						<!-- Ingredients -->
 						<div class="ingredients">
 							<h3>Ingredients</h3>
 							<ul id="ingredients-list"></ul>
 						</div>
 
-						<!-- Instructions -->
 						<div class="instructions">
 							<h3>Instructions</h3>
 							<ol id="instructions-list"></ol>
 						</div>
 
-						<!-- Reviews -->
 						<div class="reviews">
 							<h3>Reviews</h3>
-							<div id="reviews-container">Loading reviews...</div>
+							<div id="reviews-container"></div>
 						</div>
-					</section>
 
+						<button onclick="window.print()">Print Recipe</button>
+					</section>
 				</div>
 			</div>
 
 			<!-- Sidebar -->
 			<div id="sidebar">
 				<div class="inner">
-					
 					<!-- Menu -->
 					<nav id="menu">
 						<header class="major">
@@ -98,11 +107,6 @@
 							<li><a href="appetizers.html" class="active">Appetizers</a></li>
 						</ul>
 					</nav>
-
-					<!-- Footer -->
-					<footer id="footer">
-						<p class="copyright">&copy; La Mise en Place. All rights reserved.</p>
-					</footer>
 				</div>
 			</div>
 
@@ -110,65 +114,81 @@
 
 		<!-- Scripts -->
 		<script>
-			// Helper function to get query parameters
-			function getQueryParam(param) {
-				const urlParams = new URLSearchParams(window.location.search);
-				return urlParams.get(param);
-			}
+			// API Endpoints
+			const searchApiUrl = '/api/appetizers/search'; // Adjust based on your backend
+			const recipeApiUrl = '/api/recipes/';
 
-			// Fetch recipe and reviews
-			async function fetchRecipeData() {
-				const recipeId = getQueryParam('id'); // Get recipe ID from URL
-				if (!recipeId) {
-					document.getElementById('recipe-title').textContent = 'Recipe not found';
-					return;
+			// Search Functionality
+			document.getElementById('search-button').addEventListener('click', async () => {
+				const query = document.getElementById('search-bar').value;
+				const searchResults = document.getElementById('search-results');
+				searchResults.innerHTML = 'Loading...';
+
+				try {
+					// Fetch search results
+					const response = await fetch(`${searchApiUrl}?q=${encodeURIComponent(query)}`);
+					const recipes = await response.json();
+
+					// Display results
+					if (recipes.length > 0) {
+						searchResults.innerHTML = recipes.map(recipe => `
+							<div class="recipe-card" onclick="fetchRecipe(${recipe.id})">
+								<h3>${recipe.title}</h3>
+								<p>${recipe.description}</p>
+							</div>
+						`).join('');
+					} else {
+						searchResults.innerHTML = '<p>No recipes found.</p>';
+					}
+				} catch (error) {
+					searchResults.innerHTML = '<p>Error fetching search results.</p>';
 				}
+			});
+
+			// Fetch and Display Recipe Details
+			async function fetchRecipe(recipeId) {
+				const recipeContainer = document.getElementById('recipe-container');
+				const recipeTitle = document.getElementById('recipe-title');
+				const recipeDescription = document.getElementById('recipe-description');
+				const ingredientsList = document.getElementById('ingredients-list');
+				const instructionsList = document.getElementById('instructions-list');
+				const reviewsContainer = document.getElementById('reviews-container');
+
+				recipeContainer.style.display = 'block';
 
 				try {
 					// Fetch recipe details
-					const recipeResponse = await fetch(`/api/recipes/${recipeId}`);
+					const recipeResponse = await fetch(`${recipeApiUrl}${recipeId}`);
 					const recipeData = await recipeResponse.json();
 
-					// Update recipe details on page
-					document.getElementById('recipe-title').textContent = recipeData.title;
-					document.getElementById('recipe-description').textContent = recipeData.description;
+					// Populate recipe details
+					recipeTitle.textContent = recipeData.title;
+					recipeDescription.textContent = recipeData.description;
 
-					// Populate ingredients list
-					const ingredientsList = document.getElementById('ingredients-list');
 					ingredientsList.innerHTML = recipeData.ingredients
 						.map(ingredient => `<li>${ingredient.quantity} ${ingredient.unit} - ${ingredient.name}</li>`)
 						.join('');
 
-					// Populate instructions list
-					const instructionsList = document.getElementById('instructions-list');
 					instructionsList.innerHTML = recipeData.instructions
 						.map(step => `<li>${step}</li>`)
 						.join('');
 
 					// Fetch reviews
-					const reviewsResponse = await fetch(`/api/recipes/${recipeId}/reviews`);
+					const reviewsResponse = await fetch(`${recipeApiUrl}${recipeId}/reviews`);
 					const reviewsData = await reviewsResponse.json();
 
-					// Populate reviews
-					const reviewsContainer = document.getElementById('reviews-container');
 					reviewsContainer.innerHTML = reviewsData.length
-						? reviewsData
-							.map(review => `
-								<div class="review">
-									<strong>${review.user} - ${review.rating}/5</strong>
-									<p>${review.review_text}</p>
-								</div>
-							`)
-							.join('')
+						? reviewsData.map(review => `
+							<div class="review">
+								<strong>${review.user} - ${review.rating}/5</strong>
+								<p>${review.review_text}</p>
+							</div>
+						`).join('')
 						: '<p>No reviews yet.</p>';
 				} catch (error) {
-					console.error('Error fetching recipe data:', error);
-					document.getElementById('recipe-title').textContent = 'Error loading recipe';
+					recipeContainer.innerHTML = '<p>Error loading recipe details.</p>';
 				}
 			}
-
-			// Load recipe data on page load
-			window.onload = fetchRecipeData;
 		</script>
 	</body>
 </html>
