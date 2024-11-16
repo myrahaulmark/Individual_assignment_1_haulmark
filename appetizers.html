@@ -6,27 +6,38 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
 		<style>
-			/* Additional styling */
+			/* Additional Styling */
 			.search-results {
 				margin-top: 20px;
 			}
 
-			.recipe-container {
-				margin-top: 30px;
-			}
-
 			.recipe-card {
-				border: 1px solid #ddd;
+				display: grid;
+				grid-template-columns: 2fr 1fr; /* Two columns: details and meta-info */
+				gap: 15px;
 				padding: 10px;
+				border: 1px solid #ddd;
 				border-radius: 8px;
-				margin-bottom: 15px;
 				background: #f9f9f9;
+				margin-bottom: 15px;
 				cursor: pointer;
 				transition: box-shadow 0.3s;
 			}
 
 			.recipe-card:hover {
 				box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+			}
+
+			.recipe-details h3 {
+				margin-top: 0;
+			}
+
+			.recipe-meta p {
+				margin: 5px 0;
+			}
+
+			.recipe-container {
+				margin-top: 30px;
 			}
 
 			.ingredients, .instructions, .reviews {
@@ -63,8 +74,9 @@
 						<input type="text" id="search-bar" placeholder="Search appetizers..." />
 						<button id="search-button">Search</button>
 
+						<!-- Search Results -->
 						<div class="search-results" id="search-results">
-							<!-- Search results will populate here -->
+							<!-- Recipes will load dynamically here -->
 						</div>
 					</section>
 
@@ -96,6 +108,7 @@
 			<!-- Sidebar -->
 			<div id="sidebar">
 				<div class="inner">
+					
 					<!-- Menu -->
 					<nav id="menu">
 						<header class="major">
@@ -133,8 +146,14 @@
 					if (recipes.length > 0) {
 						searchResults.innerHTML = recipes.map(recipe => `
 							<div class="recipe-card" onclick="fetchRecipe(${recipe.id})">
-								<h3>${recipe.title}</h3>
-								<p>${recipe.description}</p>
+								<div class="recipe-details">
+									<h3>${recipe.title}</h3>
+									<p>${recipe.description}</p>
+								</div>
+								<div class="recipe-meta">
+									<p><strong>Prep Time:</strong> ${recipe.prep_time} mins</p>
+									<p><strong>Allergen Warning:</strong> ${recipe.is_allergen ? 'Yes' : 'No'}</p>
+								</div>
 							</div>
 						`).join('');
 					} else {
