@@ -1,39 +1,35 @@
 <!DOCTYPE HTML>
 <html>
 	<head>
-		<title>Appetizers - La Mise en Place</title>
+		<title>Recipe - La Mise en Place</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
 		<style>
-			/* Additional CSS for Category Pages (Optional) */
-			.recipe-list {
-				display: grid;
-				grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-				gap: 20px;
+			/* Additional styling for recipe details and reviews */
+			.recipe-container {
 				margin-top: 20px;
 			}
 
-			.recipe-card {
+			.ingredients, .instructions, .reviews {
+				margin-bottom: 30px;
+			}
+
+			.reviews h3 {
+				margin-bottom: 10px;
+			}
+
+			.review {
 				border: 1px solid #ddd;
-				padding: 15px;
+				padding: 10px;
 				border-radius: 8px;
+				margin-bottom: 10px;
 				background: #f9f9f9;
-				transition: box-shadow 0.3s;
 			}
 
-			.recipe-card:hover {
-				box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-			}
-
-			.recipe-card h3 {
-				margin-top: 0;
-			}
-
-			.recipe-card img {
-				width: 100%;
-				height: auto;
-				border-radius: 8px;
+			.review strong {
+				display: block;
+				margin-bottom: 5px;
 			}
 		</style>
 	</head>
@@ -58,36 +54,30 @@
 						</ul>
 					</header>
 
-					<!-- Content -->
-					<section>
+					<!-- Recipe Content -->
+					<section class="recipe-container">
 						<header class="main">
-							<h1>Appetizers</h1>
+							<h1 id="recipe-title">Loading recipe...</h1>
 						</header>
-						
-						<p>Discover a variety of delicious appetizer recipes to start your meal off right. Explore our collection below!</p>
+						<p id="recipe-description"></p>
 
-						<!-- Recipe List -->
-						<div class="recipe-list">
-							<div class="recipe-card">
-								<img src="images/recipe1.jpg" alt="Bruschetta">
-								<h3>Bruschetta</h3>
-								<p>A classic Italian appetizer made with tomatoes, basil, and olive oil on toasted bread.</p>
-								<a href="recipe1.html" class="button primary small">View Recipe</a>
-							</div>
-							<div class="recipe-card">
-								<img src="images/recipe2.jpg" alt="Stuffed Mushrooms">
-								<h3>Stuffed Mushrooms</h3>
-								<p>Delicious mushrooms filled with a creamy cheese and herb stuffing.</p>
-								<a href="recipe2.html" class="button primary small">View Recipe</a>
-							</div>
-							<div class="recipe-card">
-								<img src="images/recipe3.jpg" alt="Spring Rolls">
-								<h3>Spring Rolls</h3>
-								<p>Fresh and crispy spring rolls served with a tangy dipping sauce.</p>
-								<a href="recipe3.html" class="button primary small">View Recipe</a>
-							</div>
+						<!-- Ingredients -->
+						<div class="ingredients">
+							<h3>Ingredients</h3>
+							<ul id="ingredients-list"></ul>
 						</div>
 
+						<!-- Instructions -->
+						<div class="instructions">
+							<h3>Instructions</h3>
+							<ol id="instructions-list"></ol>
+						</div>
+
+						<!-- Reviews -->
+						<div class="reviews">
+							<h3>Reviews</h3>
+							<div id="reviews-container">Loading reviews...</div>
+						</div>
 					</section>
 
 				</div>
@@ -97,13 +87,6 @@
 			<div id="sidebar">
 				<div class="inner">
 					
-					<!-- Search -->
-					<section id="search" class="alt">
-						<form method="post" action="#">
-							<input type="text" name="query" id="query" placeholder="Search" />
-						</form>
-					</section>
-
 					<!-- Menu -->
 					<nav id="menu">
 						<header class="major">
@@ -113,14 +96,6 @@
 							<li><a href="index.html">Homepage</a></li>
 							<li><a href="account.html">My Account</a></li>
 							<li><a href="appetizers.html" class="active">Appetizers</a></li>
-							<li>
-								<span class="opener">Categories Submenu</span>
-								<ul>
-									<li><a href="soups.html">Soups</a></li>
-									<li><a href="desserts.html">Desserts</a></li>
-									<li><a href="beef.html">Beef</a></li>
-								</ul>
-							</li>
 						</ul>
 					</nav>
 
@@ -134,11 +109,66 @@
 		</div>
 
 		<!-- Scripts -->
-		<script src="assets/js/jquery.min.js"></script>
-		<script src="assets/js/browser.min.js"></script>
-		<script src="assets/js/breakpoints.min.js"></script>
-		<script src="assets/js/util.js"></script>
-		<script src="assets/js/main.js"></script>
+		<script>
+			// Helper function to get query parameters
+			function getQueryParam(param) {
+				const urlParams = new URLSearchParams(window.location.search);
+				return urlParams.get(param);
+			}
 
+			// Fetch recipe and reviews
+			async function fetchRecipeData() {
+				const recipeId = getQueryParam('id'); // Get recipe ID from URL
+				if (!recipeId) {
+					document.getElementById('recipe-title').textContent = 'Recipe not found';
+					return;
+				}
+
+				try {
+					// Fetch recipe details
+					const recipeResponse = await fetch(`/api/recipes/${recipeId}`);
+					const recipeData = await recipeResponse.json();
+
+					// Update recipe details on page
+					document.getElementById('recipe-title').textContent = recipeData.title;
+					document.getElementById('recipe-description').textContent = recipeData.description;
+
+					// Populate ingredients list
+					const ingredientsList = document.getElementById('ingredients-list');
+					ingredientsList.innerHTML = recipeData.ingredients
+						.map(ingredient => `<li>${ingredient.quantity} ${ingredient.unit} - ${ingredient.name}</li>`)
+						.join('');
+
+					// Populate instructions list
+					const instructionsList = document.getElementById('instructions-list');
+					instructionsList.innerHTML = recipeData.instructions
+						.map(step => `<li>${step}</li>`)
+						.join('');
+
+					// Fetch reviews
+					const reviewsResponse = await fetch(`/api/recipes/${recipeId}/reviews`);
+					const reviewsData = await reviewsResponse.json();
+
+					// Populate reviews
+					const reviewsContainer = document.getElementById('reviews-container');
+					reviewsContainer.innerHTML = reviewsData.length
+						? reviewsData
+							.map(review => `
+								<div class="review">
+									<strong>${review.user} - ${review.rating}/5</strong>
+									<p>${review.review_text}</p>
+								</div>
+							`)
+							.join('')
+						: '<p>No reviews yet.</p>';
+				} catch (error) {
+					console.error('Error fetching recipe data:', error);
+					document.getElementById('recipe-title').textContent = 'Error loading recipe';
+				}
+			}
+
+			// Load recipe data on page load
+			window.onload = fetchRecipeData;
+		</script>
 	</body>
 </html>
