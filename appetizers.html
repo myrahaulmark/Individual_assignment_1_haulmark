@@ -53,6 +53,19 @@
 				margin-bottom: 10px;
 				background: #f9f9f9;
 			}
+
+			/* Styling for header icons */
+			#header .icons {
+				display: flex;
+				justify-content: flex-end;
+				gap: 10px;
+				list-style: none;
+				padding: 0;
+			}
+			#header .icons li a {
+				text-decoration: none;
+				color: #3d4449;
+			}
 		</style>
 	</head>
 	<body class="is-preload">
@@ -60,14 +73,20 @@
 		<!-- Wrapper -->
 		<div id="wrapper">
 
+			<!-- Header -->
+			<header id="header">
+				<a href="index.html" class="logo"><strong>La Mise en Place</strong> Recipe Database</a>
+				<ul class="icons">
+					<li><a href="index.html" class="icon solid fa-home"><span class="label">Home</span></a></li>
+					<li><a href="categories.html" class="icon solid fa-th"><span class="label">Categories</span></a></li>
+					<li><a href="account.html" class="icon solid fa-user"><span class="label">Account</span></a></li>
+					<li><a href="#" class="icon solid fa-envelope"><span class="label">Contact</span></a></li>
+				</ul>
+			</header>
+
 			<!-- Main -->
 			<div id="main">
 				<div class="inner">
-
-					<!-- Header -->
-					<header id="header">
-						<a href="index.html" class="logo"><strong>La Mise en Place</strong> Recipe Database</a>
-					</header>
 
 					<!-- Search Section -->
 					<section>
@@ -108,159 +127,37 @@
 			</div>
 
 			<!-- Sidebar -->
-            <div id="sidebar">
-                <div class="inner">
+			<div id="sidebar">
+				<div class="inner">
+					<!-- Menu -->
+					<nav id="menu">
+						<header class="major">
+							<h2>Menu</h2>
+						</header>
+						<ul>
+							<li><a href="index.html">Homepage</a></li>
+							<li><a href="account.html">My Account</a></li>
+							<li><a href="generic.html">Coming soon!</a></li>
+							<li>
+								<span class="opener">Categories Submenu</span>
+								<ul>
+									<li><a href="appetizers.html">Appetizers</a></li>
+									<li><a href="#">Soups</a></li>
+									<li><a href="#">Desserts</a></li>
+									<li><a href="#">Beef</a></li>
+								</ul>
+							</li>
+						</ul>
+					</nav>
+				</div>
+			</div>
+		</div>
 
-                    <!-- Search -->
-                        <section id="search" class="alt">
-                            <form method="post" action="#">
-                                <input type="text" name="query" id="query" placeholder="Search" />
-                            </form>
-                        </section>
-
-                    <!-- Menu -->
-                    <nav id="menu">
-                        <header class="major">
-                            <h2>Menu</h2>
-                        </header>
-                        <ul>
-                            <li><a href="index.html">Homepage</a></li>
-                            <li><a href="account.html">My Account</a></li>
-                            <li><a href="generic.html">Coming soon!</a></li>
-                            <li>
-                                <span class="opener">Categories Submenu</span>
-                                <ul>
-                                    <li><a href="appetizers.html">Appetizers</a></li>
-                                    <li><a href="#">Soups</a></li>
-                                    <li><a href="#">Desserts</a></li>
-                                    <li><a href="#">Beef</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </nav>
-                    <!-- Section -->
-                        <section>
-                            <header class="major">
-                                <h2>Featured Recipe</h2>
-                            </header>
-                            <div class="mini-posts">
-                                <article>
-                                    <a href="#" class="image"><img src="images/pic17_main.jpg" alt="Our pick of the season!" /></a>
-                                    <p>Get ready for the holidays with this feast!</p>
-                                </article>
-                            </div>
-                            <ul class="actions">
-                                <li><a href="#" class="button">More</a></li>
-                            </ul>
-                        </section>
-
-                    <!-- Section -->
-                        <section>
-                            <header class="major">
-                                <h2>Get in touch</h2>
-                            </header>
-                            <a href="#" class="image"><img src="images/miseenplace.png" alt="" /></a>
-                            <p>Need help or is there something we should know?</p>
-                            <ul class="contact">
-                                <li class="icon solid fa-envelope"><a href="#">miseenplace@uark.edu</a></li>
-                                <li class="icon solid fa-phone">(479) 575-0000</li>
-                                <li class="icon solid fa-home">100 Recipe Hall<br />
-                                Fayetteville, AR 00000-0000</li>
-                            </ul>
-                        </section>
-
-                    <!-- Footer -->
-                        <footer id="footer">
-                            <p class="copyright">&copy; Untitled. All rights reserved. Demo images taken from Microsoft stock images.</a></p>
-                        </footer>
-
-                </div>
-            </div>
-
-    </div>
 		<!-- Scripts -->
-		<script>
-			// API Endpoints
-			const searchApiUrl = '/api/appetizers/search'; // Adjust based on your backend
-			const recipeApiUrl = '/api/recipes/';
-
-			// Search Functionality
-			document.getElementById('search-button').addEventListener('click', async () => {
-				const query = document.getElementById('search-bar').value;
-				const searchResults = document.getElementById('search-results');
-				searchResults.innerHTML = 'Loading...';
-
-				try {
-					// Fetch search results
-					const response = await fetch(`${searchApiUrl}?q=${encodeURIComponent(query)}`);
-					const recipes = await response.json();
-
-					// Display results
-					if (recipes.length > 0) {
-						searchResults.innerHTML = recipes.map(recipe => `
-							<div class="recipe-card" onclick="fetchRecipe(${recipe.id})">
-								<div class="recipe-details">
-									<h3>${recipe.title}</h3>
-									<p>${recipe.description}</p>
-								</div>
-								<div class="recipe-meta">
-									<p><strong>Prep Time:</strong> ${recipe.prep_time} mins</p>
-									<p><strong>Allergen Warning:</strong> ${recipe.is_allergen ? 'Yes' : 'No'}</p>
-								</div>
-							</div>
-						`).join('');
-					} else {
-						searchResults.innerHTML = '<p>No recipes found.</p>';
-					}
-				} catch (error) {
-					searchResults.innerHTML = '<p>Error fetching search results.</p>';
-				}
-			});
-
-			// Fetch and Display Recipe Details
-			async function fetchRecipe(recipeId) {
-				const recipeContainer = document.getElementById('recipe-container');
-				const recipeTitle = document.getElementById('recipe-title');
-				const recipeDescription = document.getElementById('recipe-description');
-				const ingredientsList = document.getElementById('ingredients-list');
-				const instructionsList = document.getElementById('instructions-list');
-				const reviewsContainer = document.getElementById('reviews-container');
-
-				recipeContainer.style.display = 'block';
-
-				try {
-					// Fetch recipe details
-					const recipeResponse = await fetch(`${recipeApiUrl}${recipeId}`);
-					const recipeData = await recipeResponse.json();
-
-					// Populate recipe details
-					recipeTitle.textContent = recipeData.title;
-					recipeDescription.textContent = recipeData.description;
-
-					ingredientsList.innerHTML = recipeData.ingredients
-						.map(ingredient => `<li>${ingredient.quantity} ${ingredient.unit} - ${ingredient.name}</li>`)
-						.join('');
-
-					instructionsList.innerHTML = recipeData.instructions
-						.map(step => `<li>${step}</li>`)
-						.join('');
-
-					// Fetch reviews
-					const reviewsResponse = await fetch(`${recipeApiUrl}${recipeId}/reviews`);
-					const reviewsData = await reviewsResponse.json();
-
-					reviewsContainer.innerHTML = reviewsData.length
-						? reviewsData.map(review => `
-							<div class="review">
-								<strong>${review.user} - ${review.rating}/5</strong>
-								<p>${review.review_text}</p>
-							</div>
-						`).join('')
-						: '<p>No reviews yet.</p>';
-				} catch (error) {
-					recipeContainer.innerHTML = '<p>Error loading recipe details.</p>';
-				}
-			}
-		</script>
+		<script src="assets/js/jquery.min.js"></script>
+		<script src="assets/js/browser.min.js"></script>
+		<script src="assets/js/breakpoints.min.js"></script>
+		<script src="assets/js/util.js"></script>
+		<script src="assets/js/main.js"></script>
 	</body>
 </html>
