@@ -52,12 +52,53 @@
 							
 								</section>
 							<!-- Random Recipes Section -->
-								<section id="random-recipes">
-									<h2>Discover Random Recipes</h2>
-									<div id="recipe-cards-container" class="recipe-cards-container">
-										<!-- Random recipes will be dynamically loaded here -->
-									</div>
-								</section>
+							<section id="random-recipes">
+								<style>
+									#random-recipes .recipe-cards-container {
+										display: grid;
+										grid-template-columns: repeat(3, 1fr);
+										gap: 20px;
+										margin-top: 20px;
+									}
+							
+									#random-recipes .recipe-card {
+										border: 1px solid #ddd;
+										border-radius: 8px;
+										overflow: hidden;
+										background: #fff;
+										text-align: center;
+										transition: transform 0.3s, box-shadow 0.3s;
+										cursor: pointer;
+									}
+							
+									#random-recipes .recipe-card:hover {
+										transform: translateY(-5px);
+										box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+									}
+							
+									#random-recipes .recipe-card img {
+										width: 100%;
+										height: auto;
+									}
+							
+									#random-recipes .recipe-card h3 {
+										margin: 10px 0;
+										font-size: 1.2em;
+										color: #333;
+									}
+							
+									#random-recipes .recipe-card p {
+										font-size: 0.9em;
+										color: #666;
+										margin-bottom: 10px;
+									}
+								</style>
+								<h2>Discover Random Recipes</h2>
+								<div id="recipe-cards-container" class="recipe-cards-container">
+									<!-- Random recipes will be dynamically loaded here -->
+								</div>
+							</section>
+							
 						</div>
 					</div>
 
