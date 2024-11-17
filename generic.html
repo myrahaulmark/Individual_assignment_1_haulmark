@@ -135,16 +135,23 @@
 						<script>
 							document.addEventListener("DOMContentLoaded", async () => {
 								const randomRecipesContainer = document.getElementById('recipe-cards-container');
-								const randomApiUrl = 'www.themealdb.com/api/json/v1/1/random.php';
+								const randomApiUrl = 'https://www.themealdb.com/api/json/v1/1/random.php';
+
+								randomRecipesContainer.innerHTML = 'Loading recipes...';
 
 								try {
-									// Fetch random recipes from the API
-									const response = await fetch(randomApiUrl);
-									const data = await response.json();
+									let randomRecipes = [];
+									for (let i = 0; i < 10; i++) {
+										const response = await fetch(randomApiUrl);
+										const data = await response.json();
+										if (data.meals && data.meals.length > 0) {
+											randomRecipes.push(data.meals[0]); // Push the random recipe to the array
+										}
+									}
 
-									// Check if recipes are returned
-									if (data.meals && data.meals.length > 0) {
-										randomRecipesContainer.innerHTML = data.meals.map(recipe => `
+									// Display recipes
+									if (randomRecipes.length > 0) {
+										randomRecipesContainer.innerHTML = randomRecipes.map(recipe => `
 											<div class="recipe-card" onclick="viewRecipe('${recipe.idMeal}')">
 												<img src="${recipe.strMealThumb}" alt="${recipe.strMeal}">
 												<h3>${recipe.strMeal}</h3>
@@ -162,9 +169,9 @@
 
 							// Function to handle viewing a recipe (redirect to recipe details page)
 							function viewRecipe(recipeId) {
-								// Redirect to a recipe details page or display the recipe details in a modal
 								window.location.href = `recipe.html?id=${recipeId}`;
 							}
+
 		</script>
 		<!-- Scripts -->
 			<script src="assets/js/jquery.min.js"></script>
