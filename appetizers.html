@@ -72,22 +72,22 @@
 
 		<!-- Wrapper -->
 		<div id="wrapper">
-
-			<!-- Header -->
-			<header id="header">
-				<a href="index.html" class="logo"><strong>La Mise en Place</strong> Recipe Database</a>
-				<ul class="icons">
-					<li><a href="index.html" class="icon solid fa-home"><span class="label">Home</span></a></li>
-					<li><a href="categories.html" class="icon solid fa-th"><span class="label">Categories</span></a></li>
-					<li><a href="account.html" class="icon solid fa-user"><span class="label">Account</span></a></li>
-					<li><a href="#" class="icon solid fa-envelope"><span class="label">Contact</span></a></li>
-				</ul>
-			</header>
+	
 
 			<!-- Main -->
 			<div id="main">
 				<div class="inner">
-
+					<!-- Header -->
+					<header id="header">
+						<a href="index.html" class="logo"><strong>DEMO </strong>Recipe Database Web App </a>
+						<ul class="icons">
+							<li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
+							<li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
+							<li><a href="#" class="icon brands fa-snapchat-ghost"><span class="label">Snapchat</span></a></li>
+							<li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
+							<li><a href="#" class="icon brands fa-medium-m"><span class="label">Medium</span></a></li>
+						</ul>
+					</header>
 					<!-- Search Section -->
 					<section>
 						<h1>Appetizers</h1>
@@ -154,10 +154,94 @@
 		</div>
 
 		<!-- Scripts -->
-		<script src="assets/js/jquery.min.js"></script>
-		<script src="assets/js/browser.min.js"></script>
-		<script src="assets/js/breakpoints.min.js"></script>
-		<script src="assets/js/util.js"></script>
-		<script src="assets/js/main.js"></script>
+		<script>
+			// API Endpoints
+			const searchApiUrl = '/api/appetizers/search'; // Adjust based on your backend
+			const recipeApiUrl = '/api/recipes/';
+
+			// Search Functionality
+			document.getElementById('search-button').addEventListener('click', async () => {
+				const query = document.getElementById('search-bar').value;
+				const searchResults = document.getElementById('search-results');
+				searchResults.innerHTML = 'Loading...';
+
+				try {
+					// Fetch search results
+					const response = await fetch(`${searchApiUrl}?q=${encodeURIComponent(query)}`);
+					const recipes = await response.json();
+
+					// Display results
+					if (recipes.length > 0) {
+						searchResults.innerHTML = recipes.map(recipe => `
+							<div class="recipe-card" onclick="fetchRecipe(${recipe.id})">
+								<div class="recipe-details">
+									<h3>${recipe.title}</h3>
+									<p>${recipe.description}</p>
+								</div>
+								<div class="recipe-meta">
+									<p><strong>Prep Time:</strong> ${recipe.prep_time} mins</p>
+									<p><strong>Allergen Warning:</strong> ${recipe.is_allergen ? 'Yes' : 'No'}</p>
+								</div>
+							</div>
+						`).join('');
+					} else {
+						searchResults.innerHTML = '<p>No recipes found.</p>';
+					}
+				} catch (error) {
+					searchResults.innerHTML = '<p>Error fetching search results.</p>';
+				}
+			});
+
+			// Fetch and Display Recipe Details
+			async function fetchRecipe(recipeId) {
+				const recipeContainer = document.getElementById('recipe-container');
+				const recipeTitle = document.getElementById('recipe-title');
+				const recipeDescription = document.getElementById('recipe-description');
+				const ingredientsList = document.getElementById('ingredients-list');
+				const instructionsList = document.getElementById('instructions-list');
+				const reviewsContainer = document.getElementById('reviews-container');
+
+				recipeContainer.style.display = 'block';
+
+				try {
+					// Fetch recipe details
+					const recipeResponse = await fetch(`${recipeApiUrl}${recipeId}`);
+					const recipeData = await recipeResponse.json();
+
+					// Populate recipe details
+					recipeTitle.textContent = recipeData.title;
+					recipeDescription.textContent = recipeData.description;
+
+					ingredientsList.innerHTML = recipeData.ingredients
+						.map(ingredient => `<li>${ingredient.quantity} ${ingredient.unit} - ${ingredient.name}</li>`)
+						.join('');
+
+					instructionsList.innerHTML = recipeData.instructions
+						.map(step => `<li>${step}</li>`)
+						.join('');
+
+					// Fetch reviews
+					const reviewsResponse = await fetch(`${recipeApiUrl}${recipeId}/reviews`);
+					const reviewsData = await reviewsResponse.json();
+
+					reviewsContainer.innerHTML = reviewsData.length
+						? reviewsData.map(review => `
+							<div class="review">
+								<strong>${review.user} - ${review.rating}/5</strong>
+								<p>${review.review_text}</p>
+							</div>
+						`).join('')
+						: '<p>No reviews yet.</p>';
+				} catch (error) {
+					recipeContainer.innerHTML = '<p>Error loading recipe details.</p>';
+				}
+			}
+			</script>
+			<!-- External Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
 	</body>
 </html>
