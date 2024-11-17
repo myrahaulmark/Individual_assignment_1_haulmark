@@ -34,20 +34,37 @@
 								</header>
 
 							<!-- Content -->
-								<section>
+								<<section>
 									<header class="main">
 										<h1>Try a new recipe for fun...</h1>
 									</header>
-
-									<span class="image main"><img src="images/pic11.jpg" alt="Be adventurous!" /></span>
-
-									<p>Cooking is an adventure, a chance to unleash your creativity and try something new. 
+								
+									<div class="image-wrapper">
+										<img src="images/pic11.jpg" alt="Be adventurous and try something new!" />
+									</div>
+								
+									<p>
+										Cooking is an adventure, a chance to unleash your creativity and try something new. 
 										Whether you're recreating a classic dish or experimenting with unexpected flavors, it's all about having fun in the kitchen. 
 										With La Mise en Place, you'll find inspiration to explore recipes that excite your taste buds and spark your curiosity. 
-										Let your inner chef shine, and don't be afraid to make it your own—because every great dish starts with a little imagination!</p>
-									
-																
+										Let your inner chef shine, and don't be afraid to make it your own—because every great dish starts with a little imagination!
+									</p>
 								</section>
+								
+								<style>
+									.image-wrapper {
+										float: right; /* Align the image to the right */
+										width: 40%; /* Adjust the size of the image (40% of its container) */
+										margin: 0 0 1em 1em; /* Add spacing around the image */
+									}
+								
+									.image-wrapper img {
+										width: 100%; /* Ensure the image scales within its wrapper */
+										height: auto; /* Maintain aspect ratio */
+										border-radius: 8px; /* Optional: Add rounded corners */
+									}
+								</style>
+								
 							<!-- Random Recipes Section -->
 							<section id="random-recipes">
 								<style>
