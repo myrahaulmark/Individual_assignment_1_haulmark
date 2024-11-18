@@ -101,27 +101,12 @@
 						</div>
 					</section>
 
-					<!-- Recipe Display Section -->
-					<section class="recipe-container" id="recipe-container" style="display: none;">
-						<h2 id="recipe-title"></h2>
-						<p id="recipe-description"></p>
-
-						<div class="ingredients">
-							<h3>Ingredients</h3>
-							<ul id="ingredients-list"></ul>
+					 <!-- Random Recipes Section -->
+					 <section id="random-recipes">
+						<h2>Discover Random Appetizers</h2>
+						<div id="recipes-container" class="recipe-cards-container">
+							<!-- Recipe cards will be dynamically added here -->
 						</div>
-
-						<div class="instructions">
-							<h3>Instructions</h3>
-							<ol id="instructions-list"></ol>
-						</div>
-
-						<div class="reviews">
-							<h3>Reviews</h3>
-							<div id="reviews-container"></div>
-						</div>
-
-						<button onclick="window.print()">Print Recipe</button>
 					</section>
 				</div>
 			</div>
@@ -154,89 +139,36 @@
 		</div>
 
 		<!-- Scripts -->
-		<script>
-			// API Endpoints
-			const searchApiUrl = '/api/appetizers/search'; // Adjust based on your backend
-			const recipeApiUrl = '/api/recipes/';
-
-			// Search Functionality
-			document.getElementById('search-button').addEventListener('click', async () => {
-				const query = document.getElementById('search-bar').value;
-				const searchResults = document.getElementById('search-results');
-				searchResults.innerHTML = 'Loading...';
-
+		 <script>
+			document.addEventListener("DOMContentLoaded", async () => {
+				const apiUrl = "http://localhost:5000/api/recipes/appetizers/random"; // Adjust if deployed
+				const recipesContainer = document.getElementById("recipes-container");
+	
 				try {
-					// Fetch search results
-					const response = await fetch(`${searchApiUrl}?q=${encodeURIComponent(query)}`);
-					const recipes = await response.json();
-
-					// Display results
-					if (recipes.length > 0) {
-						searchResults.innerHTML = recipes.map(recipe => `
-							<div class="recipe-card" onclick="fetchRecipe(${recipe.id})">
-								<div class="recipe-details">
-									<h3>${recipe.title}</h3>
-									<p>${recipe.description}</p>
-								</div>
-								<div class="recipe-meta">
-									<p><strong>Prep Time:</strong> ${recipe.prep_time} mins</p>
-									<p><strong>Allergen Warning:</strong> ${recipe.is_allergen ? 'Yes' : 'No'}</p>
-								</div>
+					// Fetch random appetizer recipes
+					const response = await fetch(apiUrl);
+					const data = await response.json();
+	
+					if (data.recipes && data.recipes.length > 0) {
+						// Generate recipe cards
+						recipesContainer.innerHTML = data.recipes.map(recipe => `
+							<div class="recipe-card">
+								<h3 class="recipe-name">${recipe.RecipeName}</h3>
+								<img class="recipe-image" src="${recipe.ImageURL}" alt="${recipe.RecipeName}">
+								<p class="recipe-description">${recipe.Description}</p>
+								<p><strong>Cooking Time:</strong> ${recipe.CookingTime} mins</p>
+								<p><strong>Servings:</strong> ${recipe.Servings}</p>
 							</div>
 						`).join('');
 					} else {
-						searchResults.innerHTML = '<p>No recipes found.</p>';
+						recipesContainer.innerHTML = '<p>No recipes found. Please try again later.</p>';
 					}
 				} catch (error) {
-					searchResults.innerHTML = '<p>Error fetching search results.</p>';
+					console.error("Error fetching random recipes:", error);
+					recipesContainer.innerHTML = '<p>Error loading recipes. Please try again later.</p>';
 				}
 			});
-
-			// Fetch and Display Recipe Details
-			async function fetchRecipe(recipeId) {
-				const recipeContainer = document.getElementById('recipe-container');
-				const recipeTitle = document.getElementById('recipe-title');
-				const recipeDescription = document.getElementById('recipe-description');
-				const ingredientsList = document.getElementById('ingredients-list');
-				const instructionsList = document.getElementById('instructions-list');
-				const reviewsContainer = document.getElementById('reviews-container');
-
-				recipeContainer.style.display = 'block';
-
-				try {
-					// Fetch recipe details
-					const recipeResponse = await fetch(`${recipeApiUrl}${recipeId}`);
-					const recipeData = await recipeResponse.json();
-
-					// Populate recipe details
-					recipeTitle.textContent = recipeData.title;
-					recipeDescription.textContent = recipeData.description;
-
-					ingredientsList.innerHTML = recipeData.ingredients
-						.map(ingredient => `<li>${ingredient.quantity} ${ingredient.unit} - ${ingredient.name}</li>`)
-						.join('');
-
-					instructionsList.innerHTML = recipeData.instructions
-						.map(step => `<li>${step}</li>`)
-						.join('');
-
-					// Fetch reviews
-					const reviewsResponse = await fetch(`${recipeApiUrl}${recipeId}/reviews`);
-					const reviewsData = await reviewsResponse.json();
-
-					reviewsContainer.innerHTML = reviewsData.length
-						? reviewsData.map(review => `
-							<div class="review">
-								<strong>${review.user} - ${review.rating}/5</strong>
-								<p>${review.review_text}</p>
-							</div>
-						`).join('')
-						: '<p>No reviews yet.</p>';
-				} catch (error) {
-					recipeContainer.innerHTML = '<p>Error loading recipe details.</p>';
-				}
-			}
-			</script>
+		</script>
 			<!-- External Scripts -->
 			<script src="assets/js/jquery.min.js"></script>
 			<script src="assets/js/browser.min.js"></script>
