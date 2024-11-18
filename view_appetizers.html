@@ -29,30 +29,20 @@
 					</header>
 
 					<!-- Recipe Section -->
-                    <section>
+                     <!-- Recipe Section -->
+                     <section>
                         <div id="recipe-container">
-                            <!-- Recipe Title -->
-                            <h1 id="recipe-name">Recipe Title</h1> <!-- Matches RecipeName -->
-                            
-                            <!-- Recipe Image -->
-                            <img id="recipe-image" alt="Recipe Image" style="max-width: 100%; height: auto;"> <!-- Matches ImageURL -->
-                            
-                            <!-- Recipe Category -->
-                            <p><strong>Category:</strong> <span id="recipe-category">Appetizers</span></p> <!-- Matches fixed category -->
-                            
-                            <!-- Recipe Description -->
-                            <p id="recipe-description">Description</p> <!-- Matches Description -->
-                            
-                            <!-- Recipe Servings -->
-                            <p id="recipe-servings"></p> <!-- Matches Servings -->
-                            
-                            <!-- Ingredients -->
+                            <h1 id="recipe-name">Recipe Title</h1>
+                            <img id="recipe-image" alt="Recipe Image" style="max-width: 100%; height: auto;" />
+                            <p><strong>Category:</strong> <span id="recipe-category">Category</span></p>
+                            <p id="recipe-description">Description</p>
+                            <p id="recipe-servings"></p>
                             <h3>Ingredients</h3>
-                            <ul id="ingredients-list"></ul> <!-- Matches ingredients array -->
-                            
-                            <!-- Instructions -->
+                            <ul id="ingredients-list"></ul>
                             <h3>Instructions</h3>
-                            <p id="recipe-instructions">Instructions here...</p> <!-- Matches Instructions -->
+                            <ul id="recipe-instructions"></ul>
+                            <h3>Reviews</h3>
+                            <div id="recipe-reviews"></div>
                         </div>
                     </section>
 
@@ -132,45 +122,52 @@
                 const apiUrl = `http://localhost:5000/api/recipes/${recipeId}`;
 
                 try {
-                // Fetch recipe details
+                    // Fetch recipe details
                     const response = await fetch(apiUrl);
                     const recipe = await response.json();
+                    console.log("API Response:", recipe); // Log the API response for debugging
 
-                // Check if the recipe exists
+                    // Check if the recipe exists
                     if (!recipe) {
                         document.getElementById("recipe-container").innerHTML = "<p>Recipe not found.</p>";
                         return;
                     }
 
                     // Populate recipe details
-                    document.getElementById("recipe-name").textContent = recipe.Title;
-                    document.getElementById("recipe-image").src = recipe.ImageURL;
-                    document.getElementById("recipe-category").textContent = "Appetizers"; // Fixed category for context
-                    document.getElementById("recipe-description").textContent = recipe.Description;
-                    document.getElementById("recipe-servings").textContent = `Servings: ${recipe.Servings}`;
+                    document.getElementById("recipe-name").textContent = recipe.Title || "No title available";
+                    document.getElementById("recipe-image").src = recipe.ImageURL || "";
+                    document.getElementById("recipe-category").textContent = "Appetizers"; // Fixed category for now
+                    document.getElementById("recipe-description").textContent = recipe.Description || "No description available.";
+                    document.getElementById("recipe-servings").textContent = recipe.Servings ? `Servings: ${recipe.Servings}` : "";
 
-                // Populate ingredients
+                    // Populate ingredients
                     const ingredientsList = document.getElementById("ingredients-list");
-                    ingredientsList.innerHTML = recipe.Ingredients.map(ingredient => `<li>${ingredient}</li>`).join("");
+                    if (recipe.Ingredients && recipe.Ingredients.length > 0) {
+                        ingredientsList.innerHTML = recipe.Ingredients.map(ingredient => `<li>${ingredient}</li>`).join("");
+                    } else {
+                        ingredientsList.innerHTML = "<p>No ingredients listed.</p>";
+                    }
 
                     // Populate instructions
                     const instructionsList = document.getElementById("recipe-instructions");
-                    instructionsList.innerHTML = recipe.Instructions.map(step => `<li>${step}</li>`).join("");
+                    if (recipe.Instructions && recipe.Instructions.length > 0) {
+                        instructionsList.innerHTML = recipe.Instructions.map(step => `<li>${step}</li>`).join("");
+                    } else {
+                        instructionsList.innerHTML = "<p>No instructions available.</p>";
+                    }
 
-                    // Optionally, add reviews if available
+                    // Populate reviews
                     const reviewsContainer = document.getElementById("recipe-reviews");
                     if (recipe.Reviews && recipe.Reviews.length > 0) {
                         reviewsContainer.innerHTML = recipe.Reviews.map(review => `<p>${review}</p>`).join("");
                     } else {
                         reviewsContainer.innerHTML = "<p>No reviews yet.</p>";
                     }
-            } catch (error) {
-                console.error("Error fetching recipe details:", error);
-                document.getElementById("recipe-container").innerHTML = "<p>Error loading recipe details. Please try again later.</p>";
-            }
-        });
-
-
+                } catch (error) {
+                    console.error("Error fetching recipe details:", error);
+                    document.getElementById("recipe-container").innerHTML = "<p>Error loading recipe details. Please try again later.</p>";
+                }
+            });
 
 
 		</script>
