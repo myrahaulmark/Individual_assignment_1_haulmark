@@ -178,38 +178,37 @@
 						<!-- Scripts -->
 						<script>
 							document.addEventListener("DOMContentLoaded", async () => {
-								const apiUrl = "http://localhost:5000/api/recipes/appetizers/random"; // Update with your API endpoint
-								const recipesContainer = document.getElementById("recipe-cards-container");
-
+								const params = new URLSearchParams(window.location.search);
+								const recipeId = params.get("id");
+								const recipeApiUrl = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${recipeId}`;
+				
 								try {
-									// Fetch random appetizer recipes
-									const response = await fetch(apiUrl);
+									const response = await fetch(recipeApiUrl);
 									const data = await response.json();
-
-									if (data.recipes && data.recipes.length > 0) {
-								// Display recipes with click functionality
-								recipesContainer.innerHTML = data.recipes.map(recipe => `
-									<div class="recipe-card" onclick="viewRecipe(${recipe.RecipeID})">
-										<img src="${recipe.ImageURL}" alt="${recipe.RecipeName}">
-										<h3>${recipe.RecipeName}</h3>
-										<p>${recipe.Description}</p>
-									</div>
-								`).join('');
-							} else {
-								recipesContainer.innerHTML = '<p>No recipes found. Please try again later.</p>';
-							}
-						} catch (error) {
-							console.error("Error fetching random recipes:", error);
-							recipesContainer.innerHTML = '<p>Error loading recipes. Please try again later.</p>';
-						}
-					});
-
-					// Function to handle viewing a recipe (redirect to recipe details page)
-					function viewRecipe(recipeId) {
-						window.location.href = `view_recipe.html?id=${recipeId}`;
-					}
-
-		</script>
+									const recipe = data.meals[0];
+				
+									// Populate recipe details
+									document.getElementById('recipe-title').textContent = recipe.strMeal;
+									document.getElementById('recipe-image').src = recipe.strMealThumb;
+									document.getElementById('recipe-category').textContent = recipe.strCategory;
+									document.getElementById('recipe-instructions').textContent = recipe.strInstructions;
+				
+									// Populate ingredients
+									const ingredientsList = document.getElementById('ingredients-list');
+									for (let i = 1; i <= 20; i++) {
+										const ingredient = recipe[`strIngredient${i}`];
+										const measure = recipe[`strMeasure${i}`];
+										if (ingredient && ingredient.trim() !== '') {
+											const listItem = document.createElement('li');
+											listItem.textContent = `${measure} ${ingredient}`;
+											ingredientsList.appendChild(listItem);
+										}
+									}
+								} catch (error) {
+									console.error('Error fetching recipe details:', error);
+								}
+							});
+						</script>
 		<!-- Scripts -->
 			<script src="assets/js/jquery.min.js"></script>
 			<script src="assets/js/browser.min.js"></script>
