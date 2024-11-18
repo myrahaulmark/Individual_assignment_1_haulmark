@@ -107,34 +107,68 @@
 			document.addEventListener("DOMContentLoaded", async () => {
 				const params = new URLSearchParams(window.location.search);
 				const recipeId = params.get("id");
-				const recipeApiUrl = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${recipeId}`;
+				const category = params.get("category"); // Optional: Determine context if needed
+
+				if (!recipeId) {
+					document.getElementById('recipe-container').innerHTML = '<p>Recipe ID is missing. Unable to load data.</p>';
+					return;
+				}
+
+				// Define API endpoints dynamically
+				let apiUrl;
+
+				// If you have different endpoints for categories
+				if (category === 'appetizers') {
+					apiUrl = `http://localhost:5000/api/recipes/appetizers/${recipeId}`;
+				} else {
+					// Default API or MealDB as fallback
+					apiUrl = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${recipeId}`;
+				}
 
 				try {
-					const response = await fetch(recipeApiUrl);
+					// Fetch recipe details
+					const response = await fetch(apiUrl);
 					const data = await response.json();
-					const recipe = data.meals[0];
+
+					// Check if using MealDB or custom API
+					const recipe = data.meals ? data.meals[0] : data;
 
 					// Populate recipe details
-					document.getElementById('recipe-title').textContent = recipe.strMeal;
-					document.getElementById('recipe-image').src = recipe.strMealThumb;
-					document.getElementById('recipe-category').textContent = recipe.strCategory;
-					document.getElementById('recipe-instructions').textContent = recipe.strInstructions;
+					document.getElementById('recipe-title').textContent = recipe.RecipeName || recipe.strMeal;
+					document.getElementById('recipe-image').src = recipe.ImageURL || recipe.strMealThumb;
+					document.getElementById('recipe-category').textContent = recipe.CategoryName || recipe.strCategory;
+					document.getElementById('recipe-instructions').textContent = recipe.Instructions || recipe.strInstructions;
 
-					// Populate ingredients
+					// Populate ingredients list
 					const ingredientsList = document.getElementById('ingredients-list');
-					for (let i = 1; i <= 20; i++) {
-						const ingredient = recipe[`strIngredient${i}`];
-						const measure = recipe[`strMeasure${i}`];
-						if (ingredient && ingredient.trim() !== '') {
-							const listItem = document.createElement('li');
-							listItem.textContent = `${measure} ${ingredient}`;
-							ingredientsList.appendChild(listItem);
+					if (recipe.ingredients) {
+						// For your API
+						ingredientsList.innerHTML = recipe.ingredients
+							.map(ingredient => `<li>${ingredient}</li>`)
+							.join('');
+					} else {
+						// For MealDB API
+						for (let i = 1; i <= 20; i++) {
+							const ingredient = recipe[`strIngredient${i}`];
+							const measure = recipe[`strMeasure${i}`];
+							if (ingredient && ingredient.trim() !== '') {
+								const listItem = document.createElement('li');
+								listItem.textContent = `${measure} ${ingredient}`;
+								ingredientsList.appendChild(listItem);
+							}
 						}
 					}
 				} catch (error) {
 					console.error('Error fetching recipe details:', error);
+					document.getElementById('recipe-container').innerHTML = '<p>Error loading recipe details. Please try again later.</p>';
 				}
 			});
+			// funtion to make the view.html dynamic
+			function viewRecipe(recipeId) {
+    		window.location.href = `view.html?id=${recipeId}&category=appetizers`;
+		}
+
+
 		</script>
 		<script src="assets/js/jquery.min.js"></script>
 		<script src="assets/js/browser.min.js"></script>
