@@ -193,8 +193,8 @@
 					// Display recipes with click functionality
 					recipesContainer.innerHTML = data.recipes.map(recipe => `
 						<div class="recipe-card" onclick="viewRecipe(${recipe.RecipeID})">
-							<img src="${recipe.ImageURL}" alt="${recipe.Title}">
-							<h3>${recipe.Title}</h3>
+							<img src="${recipe.ImageURL}" alt="${recipe.RecipeName}">
+							<h3>${recipe.RecipeName}</h3>
 							<p>${recipe.Description}</p>
 						</div>
 					`).join('');
