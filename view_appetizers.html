@@ -29,17 +29,33 @@
 					</header>
 
 					<!-- Recipe Section -->
-					<section>
-						<header class="main">
-							<h1 id="recipe-title">Recipe Title</h1>
-						</header>
-						<img id="recipe-image" src="" alt="Recipe Image" style="max-width: 100%; height: auto;" />
-						<p><strong>Category:</strong> <span id="recipe-category"></span></p>
-						<h2>Ingredients</h2>
-						<ul id="ingredients-list"></ul>
-						<h2>Instructions</h2>
-						<p id="recipe-instructions"></p>
-					</section>
+                    <section>
+                        <div id="recipe-container">
+                            <!-- Recipe Title -->
+                            <h1 id="recipe-name">Recipe Title</h1> <!-- Matches RecipeName -->
+                            
+                            <!-- Recipe Image -->
+                            <img id="recipe-image" alt="Recipe Image" style="max-width: 100%; height: auto;"> <!-- Matches ImageURL -->
+                            
+                            <!-- Recipe Category -->
+                            <p><strong>Category:</strong> <span id="recipe-category">Appetizers</span></p> <!-- Matches fixed category -->
+                            
+                            <!-- Recipe Description -->
+                            <p id="recipe-description">Description</p> <!-- Matches Description -->
+                            
+                            <!-- Recipe Servings -->
+                            <p id="recipe-servings"></p> <!-- Matches Servings -->
+                            
+                            <!-- Ingredients -->
+                            <h3>Ingredients</h3>
+                            <ul id="ingredients-list"></ul> <!-- Matches ingredients array -->
+                            
+                            <!-- Instructions -->
+                            <h3>Instructions</h3>
+                            <p id="recipe-instructions">Instructions here...</p> <!-- Matches Instructions -->
+                        </div>
+                    </section>
+
 
 				</div>
 			</div>
@@ -105,23 +121,52 @@
 		<!-- Scripts -->
 		<script>
 			document.addEventListener("DOMContentLoaded", async () => {
-            const params = new URLSearchParams(window.location.search);
-            const recipeId = params.get("id");
-            const apiUrl = `http://localhost:5000/api/recipes/appetizers/${recipeId}`;
+                const params = new URLSearchParams(window.location.search);
+                const recipeId = params.get("id");
+                const apiUrl = `http://localhost:5000/api/recipes/appetizers/${recipeId}`; // Replace with your API endpoint
 
-            try {
-                const response = await fetch(apiUrl);
-                const recipe = await response.json();
+                try {
+                    // Fetch recipe details
+                    const response = await fetch(apiUrl);
+                    const data = await response.json();
 
-                document.getElementById('recipe-title').textContent = recipe.RecipeName;
-                document.getElementById('recipe-image').src = recipe.ImageURL;
-                document.getElementById('recipe-category').textContent = "Appetizers";
-                document.getElementById('ingredients-list').innerHTML = recipe.ingredients.map(i => `<li>${i}</li>`).join('');
-                document.getElementById('recipe-instructions').textContent = recipe.Instructions;
-            } catch (error) {
-                console.error("Error fetching appetizer recipe:", error);
-            }
-        });
+                    // Ensure the response contains the `recipes` array
+                    const recipe = data.recipes && data.recipes.length > 0 ? data.recipes[0] : null;
+
+                    if (!recipe) {
+                        document.getElementById('recipe-container').innerHTML = '<p>No recipe found.</p>';
+                        return;
+                    }
+
+                    // Populate recipe details
+                    document.getElementById('recipe-name').textContent = recipe.RecipeName || "Recipe Name Not Available";
+                    document.getElementById('recipe-image').src = recipe.ImageURL || "https://via.placeholder.com/150";
+                    document.getElementById('recipe-category').textContent = "Appetizers"; // Assuming fixed category
+                    document.getElementById('recipe-description').textContent = recipe.Description || "No description provided.";
+
+                    // Handle servings
+                    const servingsText = recipe.Servings ? `Servings: ${recipe.Servings}` : "Servings not specified.";
+                    document.getElementById('recipe-servings').textContent = servingsText;
+
+                    // Handle instructions (if applicable)
+                    const instructions = recipe.Instructions || "Instructions not provided.";
+                    document.getElementById('recipe-instructions').textContent = instructions;
+
+                    // Handle ingredients (if applicable)
+                    const ingredientsList = document.getElementById('ingredients-list');
+                    if (recipe.ingredients && recipe.ingredients.length > 0) {
+                        ingredientsList.innerHTML = recipe.ingredients
+                            .map(ingredient => `<li>${ingredient}</li>`)
+                            .join('');
+                    } else {
+                        ingredientsList.innerHTML = "<li>No ingredients listed.</li>";
+                    }
+                } catch (error) {
+                    console.error("Error fetching recipe details:", error);
+                    document.getElementById('recipe-container').innerHTML = '<p>Error loading recipe details. Please try again later.</p>';
+                }
+            });
+
 
 
 		</script>
