@@ -181,18 +181,18 @@
 								const params = new URLSearchParams(window.location.search);
 								const recipeId = params.get("id");
 								const recipeApiUrl = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${recipeId}`;
-				
+						
 								try {
 									const response = await fetch(recipeApiUrl);
 									const data = await response.json();
 									const recipe = data.meals[0];
-				
+						
 									// Populate recipe details
 									document.getElementById('recipe-title').textContent = recipe.strMeal;
 									document.getElementById('recipe-image').src = recipe.strMealThumb;
 									document.getElementById('recipe-category').textContent = recipe.strCategory;
 									document.getElementById('recipe-instructions').textContent = recipe.strInstructions;
-				
+						
 									// Populate ingredients
 									const ingredientsList = document.getElementById('ingredients-list');
 									for (let i = 1; i <= 20; i++) {
@@ -209,6 +209,7 @@
 								}
 							});
 						</script>
+						
 		<!-- Scripts -->
 			<script src="assets/js/jquery.min.js"></script>
 			<script src="assets/js/browser.min.js"></script>
