@@ -103,9 +103,49 @@
 
 					 <!-- Random Recipes Section -->
 					 <section id="random-recipes">
-						<h2>Discover Random Appetizers</h2>
-						<div id="recipes-container" class="recipe-cards-container">
-							<!-- Recipe cards will be dynamically added here -->
+						<style>
+							#random-recipes .recipe-cards-container {
+								display: grid;
+								grid-template-columns: repeat(3, 1fr);
+								gap: 20px;
+								margin-top: 20px;
+							}
+					
+							#random-recipes .recipe-card {
+								border: 1px solid #ddd;
+								border-radius: 8px;
+								overflow: hidden;
+								background: #fff;
+								text-align: center;
+								transition: transform 0.3s, box-shadow 0.3s;
+								cursor: pointer;
+							}
+					
+							#random-recipes .recipe-card:hover {
+								transform: translateY(-5px);
+								box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+							}
+					
+							#random-recipes .recipe-card img {
+								width: 100%;
+								height: auto;
+							}
+					
+							#random-recipes .recipe-card h3 {
+								margin: 10px 0;
+								font-size: 1.2em;
+								color: #333;
+							}
+					
+							#random-recipes .recipe-card p {
+								font-size: 0.9em;
+								color: #666;
+								margin-bottom: 10px;
+							}
+						</style>
+						<h2>We thought you might want to try these awesome appetizers...</h2>
+						<div id="recipe-cards-container" class="recipe-cards-container">
+							<!-- Random recipes will be dynamically loaded here -->
 						</div>
 					</section>
 				</div>
@@ -139,25 +179,23 @@
 		</div>
 
 		<!-- Scripts -->
-		 <script>
+		<script>
 			document.addEventListener("DOMContentLoaded", async () => {
-				const apiUrl = "http://localhost:5000/api/recipes/appetizers/random"; // Adjust if deployed
-				const recipesContainer = document.getElementById("recipes-container");
-	
+				const apiUrl = "http://localhost:5000/api/recipes/appetizers/random"; // Update to your actual endpoint
+				const recipesContainer = document.getElementById("recipe-cards-container");
+		
 				try {
 					// Fetch random appetizer recipes
 					const response = await fetch(apiUrl);
 					const data = await response.json();
-	
+		
 					if (data.recipes && data.recipes.length > 0) {
 						// Generate recipe cards
 						recipesContainer.innerHTML = data.recipes.map(recipe => `
 							<div class="recipe-card">
-								<h3 class="recipe-name">${recipe.RecipeName}</h3>
-								<img class="recipe-image" src="${recipe.ImageURL}" alt="${recipe.RecipeName}">
-								<p class="recipe-description">${recipe.Description}</p>
-								<p><strong>Cooking Time:</strong> ${recipe.CookingTime} mins</p>
-								<p><strong>Servings:</strong> ${recipe.Servings}</p>
+								<img src="${recipe.ImageURL}" alt="${recipe.RecipeName}">
+								<h3>${recipe.RecipeName}</h3>
+								<p>${recipe.Description}</p>
 							</div>
 						`).join('');
 					} else {
@@ -169,6 +207,7 @@
 				}
 			});
 		</script>
+		
 			<!-- External Scripts -->
 			<script src="assets/js/jquery.min.js"></script>
 			<script src="assets/js/browser.min.js"></script>
