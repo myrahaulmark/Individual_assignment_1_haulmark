@@ -186,7 +186,43 @@
 			</div>
 
 		</div>
+		<script> // JAVA SCRIPT FOR USER INPUT
+			$(document).ready(function() {
+				$("#create-account-form").on("submit", function(event) {
+					event.preventDefault(); // Prevent the form from submitting the normal way
+					
+					// Gather form data
+					var formData = {
+						'FirstName': $('#FirstName').val(),
+						'LastName': $('#LastName').val(),
+						'Email': $('#Email').val(),
+						'JoinDate': $('#JoinDate').val()
+					};
+
+					// Send data to the Flask API
+					$.ajax({
+						type: "POST",
+						url: "/api/users",  // The Flask API endpoint
+						contentType: "application/json",
+						data: JSON.stringify(formData),
+						success: function(response) {
+							alert("User added successfully! User ID: " + response.UserID);
+							// Reset the form after successful submission
+							$('#create-account-form')[0].reset();
+						},
+						error: function(xhr, status, error) {
+							alert("Error: " + xhr.responseJSON.error);
+						}
+					});
+				});
+			});
+		</script>
+		
 <!-- AP Java Scripts goes here -->
+
+
+
+
  
 		<!-- Scripts -->
 		<script src="assets/js/jquery.min.js"></script>
