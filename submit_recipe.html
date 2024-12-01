@@ -7,6 +7,34 @@
     <link rel="stylesheet" href="assets/css/main.css" />
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/main.css" />
+    <style>
+        /* General styles for form inputs */
+            form input[type="text"],
+            form input[type="number"],
+            form textarea,
+            form button {
+                width: 100%; /* Make all form elements full width */
+                padding: 10px; /* Add padding for better spacing */
+                margin-bottom: 15px; /* Add space between form fields */
+                border: 1px solid #ccc; /* Light border for consistency */
+                border-radius: 5px; /* Slight rounding of corners */
+                font-size: 16px; /* Match font size */
+                box-sizing: border-box; /* Ensure padding doesn't affect width */
+            }
+
+            /* Style for the submit button */
+            form button {
+                background-color: #333; /* Dark background for contrast */
+                color: white; /* White text for the button */
+                cursor: pointer; /* Change cursor to pointer for buttons */
+                border: none; /* Remove button border */
+                transition: background-color 0.3s ease; /* Smooth hover transition */
+            }
+
+            form button:hover {
+                background-color: #555; /* Slightly lighter background on hover */
+            }
+    </style>
 </head>
 <body class="is-preload">
 
@@ -108,27 +136,39 @@
     <!-- Scripts -->
     <script>
         document.getElementById("add-recipe-form").addEventListener("submit", async (e) => {
-            e.preventDefault();
+            e.preventDefault(); // Prevent the default form submission behavior
+    
             const message = document.getElementById("message");
             message.textContent = "Submitting your recipe...";
     
+            // Collect data from the form fields
+            const title = document.getElementById("title").value.trim();
+            const description = document.getElementById("description").value.trim();
+            const cookingTime = parseInt(document.getElementById("cooking-time").value.trim());
+            const servings = parseInt(document.getElementById("servings").value.trim());
+            const ingredients = document
+                .getElementById("ingredients")
+                .value.trim()
+                .split(",")
+                .map((item) => ({ name: item.trim() }));
+            const instructions = document
+                .getElementById("instructions")
+                .value.trim()
+                .split(".")
+                .map((step) => step.trim())
+                .filter((step) => step); // Remove empty steps
+    
+            // Build the recipe data object
             const recipeData = {
-                Title: "Spaghetti Bolognese",
-                Description: "A classic Italian dish.",
-                CookingTime: 45,
-                Servings: 4,
-                Ingredients: [
-                    { name: "Pasta" },
-                    { name: "Tomato Sauce" },
-                    { name: "Ground Beef" }
-                ],
-                Instructions: [
-                    "Cook pasta according to package instructions.",
-                    "Brown the ground beef.",
-                    "Mix the sauce and simmer."
-                ]
+                Title: title,
+                Description: description,
+                CookingTime: cookingTime,
+                Servings: servings,
+                Ingredients: ingredients,
+                Instructions: instructions,
             };
-
+    
+            console.log("Submitting recipe data:", recipeData); // For debugging
     
             try {
                 const response = await fetch("http://localhost:5000/api/recipes/add", {
@@ -139,14 +179,11 @@
                     body: JSON.stringify(recipeData),
                 });
     
-                const responseText = await response.text(); // Get the raw response text
-                console.log("Response Text:", responseText); // Log the response for debugging
-    
-                const data = JSON.parse(responseText); // Attempt to parse as JSON
-    
                 if (response.ok) {
                     message.textContent = "Recipe added successfully!";
+                    document.getElementById("add-recipe-form").reset(); // Clear the form
                 } else {
+                    const data = await response.json();
                     message.textContent = `Error: ${data.error || "Unknown error"}`;
                 }
             } catch (error) {
@@ -155,6 +192,7 @@
             }
         });
     </script>
+    
     
     
 
