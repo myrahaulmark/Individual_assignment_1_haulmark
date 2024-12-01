@@ -68,6 +68,16 @@
                         <li><a href="index.html">Homepage</a></li>
                         <li><a href="account.html">My Account</a></li>
                         <li><a href="generic.html">Try Something New!</a></li>
+                        <li><a href="search_ingredients.html">Search by Ingredients</a></li>
+                        <li>
+                            <span class="opener">Categories Submenu</span>
+                            <ul>
+                                <li><a href="appetizers.html">Appetizers</a></li>
+                                <li><a href="Soups.html">Soups</a></li>
+                                <li><a href="desserts.html">Desserts</a></li>
+                                <li><a href="#">Beef</a></li>
+                            </ul>
+                        </li>
                     </ul>
                 </nav>
             </div>
@@ -81,7 +91,7 @@
             e.preventDefault();
             const message = document.getElementById("message");
             message.textContent = "Submitting your recipe...";
-
+    
             const formData = {
                 Title: document.getElementById("title").value.trim(),
                 Description: document.getElementById("description").value.trim(),
@@ -90,16 +100,16 @@
                 Ingredients: document.getElementById("ingredients").value.trim().split(",").map(i => i.trim()),
                 Instructions: document.getElementById("instructions").value.trim().split("\n").map(i => i.trim()),
             };
-
+    
             try {
-                const response = await fetch("/api/recipes/add", {
+                const response = await fetch("http://localhost:5000/api/recipes/add", { // Updated to include full URL
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify(formData),
                 });
-
+    
                 if (response.ok) {
                     const data = await response.json();
                     message.textContent = "Recipe added successfully!";
@@ -113,6 +123,7 @@
             }
         });
     </script>
+    
 
     <!-- External Scripts -->
     <script src="assets/js/jquery.min.js"></script>
