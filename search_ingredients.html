@@ -179,32 +179,45 @@
 
 		<!-- Scripts -->
 			<script>
-				document.addEventListener("DOMContentLoaded", async () => {
-					const apiUrl = "http://localhost:5000/api/recipes/search-by-ingredients"; // Update with your API endpoint
-					const recipesContainer = document.getElementById("recipe-cards-container");
+				document.getElementById("search-button").addEventListener("click", async () => {
+            const input = document.getElementById("ingredient-input").value.trim();
+            const resultsContainer = document.getElementById("results-container");
+            resultsContainer.innerHTML = "";
 
-					try {
-						// Fetch random soup recipes
-						const response = await fetch(apiUrl);
-						const data = await response.json();
+            if (!input) {
+                resultsContainer.innerHTML = "<p>Please enter at least two ingredients.</p>";
+                return;
+            }
 
-						if (data.recipes && data.recipes.length > 0) {
-					// Display recipes with click functionality
-					recipesContainer.innerHTML = data.recipes.map(recipe => `
-						<div class="recipe-card" onclick="viewRecipe(${recipe.RecipeID})">
-							<img src="${recipe.ImageURL}" alt="${recipe.RecipeName}">
-							<h3>${recipe.RecipeName}</h3>
-							<p>${recipe.Description}</p>
-						</div>
-					`).join('');
-				} else {
-					recipesContainer.innerHTML = '<p>No recipes found. Please try again later.</p>';
-				}
-			} catch (error) {
-				console.error("Error fetching random recipes:", error);
-				recipesContainer.innerHTML = '<p>Error loading recipes. Please try again later.</p>';
-			}
-		});
+            const ingredients = input.split(',').map(item => item.trim());
+
+            if (ingredients.length < 2) {
+                resultsContainer.innerHTML = "<p>Please provide at least two ingredients.</p>";
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/recipes/search-by-ingredients?${new URLSearchParams({ ingredients })}`);
+                const data = await response.json();
+
+                if (response.status === 200 && data.recipes.length > 0) {
+                    resultsContainer.innerHTML = data.recipes.map(recipe => `
+                        <div class="recipe-card">
+                            <img src="${recipe.ImageURL}" alt="${recipe.Title}">
+                            <h3>${recipe.Title}</h3>
+                            <p><a href="view_recipe.html?id=${recipe.RecipeID}">View Recipe</a></p>
+                        </div>
+                    `).join("");
+                } else if (response.status === 404) {
+                    resultsContainer.innerHTML = "<p>No matching recipes found.</p>";
+                } else {
+                    resultsContainer.innerHTML = `<p>Error: ${data.error}</p>`;
+                }
+            } catch (error) {
+                console.error("Error fetching recipes:", error);
+                resultsContainer.innerHTML = "<p>An error occurred while searching for recipes.</p>";
+            }
+        });
 
 		// Function to handle viewing a recipe (redirect to recipe details page)
 		function viewRecipe(recipeId) {
