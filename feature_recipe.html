@@ -141,9 +141,9 @@
 					// Populate recipe details
 					document.getElementById("recipe-title").textContent = recipe.Title || "No title available";
 		
-					// Hard-code the image
+					// Hard-code the image the image for now but later have it come from database
 					const imageElement = document.getElementById("recipe-image");
-					imageElement.src = "images/pic17.jpg"; // Always use the hardcoded image
+					imageElement.src = "images/pic17_main.jpg"; // Always use the hardcoded image
 					imageElement.alt = recipe.Title || "Recipe Image";
 
 
