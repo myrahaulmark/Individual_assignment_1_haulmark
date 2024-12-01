@@ -1,11 +1,12 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-    <title>Add a Recipe - La Mise en Place</title>
+    <title>Submit a Recipe - La Mise en Place</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
     <link rel="stylesheet" href="assets/css/main.css" />
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/main.css" />
 </head>
 <body class="is-preload">
 
@@ -21,6 +22,25 @@
                 </header>
 
                 <!-- Add Recipe Form -->
+                <section id="add-recipe-guidelines">
+                    <div class="box" style="background-color: #f9f9f9; border: 2px solid #ddd; border-radius: 8px; padding: 20px;">
+                        <h2 style="font-size: 1.5em; color: #444;">Recipe Submission Guidelines</h2>
+                        <p>Follow these instructions to add your recipe:</p>
+                        <ul style="margin-left: 20px;">
+                            <li>Fill out all required fields marked with an asterisk (*).</li>
+                            <li>Provide clear, concise recipe titles and descriptions.</li>
+                            <li>Use appropriate serving sizes and preparation times.</li>
+                            <li>For ingredients and instructions:
+                                <ul>
+                                    <li>List ingredients in the order they are used.</li>
+                                    <li>Provide clear step-by-step instructions.</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                </section>
+                
                 <section>
                     <h1>Add a New Recipe</h1>
                     <form id="add-recipe-form">
@@ -102,7 +122,7 @@
             };
     
             try {
-                const response = await fetch("http://localhost:5000/api/recipes/add", { // Updated to include full URL
+                const response = await fetch("http://localhost:5000/api/recipes/add", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -110,12 +130,15 @@
                     body: JSON.stringify(formData),
                 });
     
+                const responseText = await response.text(); // Get the raw response text
+                console.log("Response Text:", responseText); // Log the response for debugging
+    
+                const data = JSON.parse(responseText); // Attempt to parse as JSON
+    
                 if (response.ok) {
-                    const data = await response.json();
                     message.textContent = "Recipe added successfully!";
                 } else {
-                    const errorData = await response.json();
-                    message.textContent = `Error: ${errorData.error}`;
+                    message.textContent = `Error: ${data.error || "Unknown error"}`;
                 }
             } catch (error) {
                 console.error("Error adding recipe:", error);
@@ -123,6 +146,7 @@
             }
         });
     </script>
+    
     
 
     <!-- External Scripts -->
