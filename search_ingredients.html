@@ -122,42 +122,45 @@
 
         <!-- Scripts -->
         <script>
-            document.getElementById("search-button").addEventListener("click", async () => {
+			document.getElementById("search-button").addEventListener("click", async () => {
 				const input = document.getElementById("search-bar").value.trim();
 				const resultsContainer = document.getElementById("search-results");
-
+		
 				// Clear previous results
 				resultsContainer.innerHTML = "";
-
+		
 				// Validate input
 				if (!input) {
 					resultsContainer.innerHTML = "<p>Please enter at least two ingredients.</p>";
 					return;
 				}
-
+		
 				const ingredients = input.split(',').map(item => item.trim());
-
+		
 				if (ingredients.length < 2) {
 					resultsContainer.innerHTML = "<p>Please provide at least two ingredients.</p>";
 					return;
 				}
-
+		
 				try {
 					// Construct query string for ingredients
 					const params = new URLSearchParams();
 					ingredients.forEach(ingredient => params.append('ingredients', ingredient));
-
+		
+					// Use the full API URL
+					const apiUrl = `http://localhost:5000/api/recipes/search-by-ingredients?${params.toString()}`;
+		
 					// Send fetch request to the API
-					const response = await fetch(`/api/recipes/search-by-ingredients?${params.toString()}`);
+					const response = await fetch(apiUrl);
 					const data = await response.json();
-
+		
 					// Check response and display results
 					if (response.status === 200 && data.recipes.length > 0) {
 						resultsContainer.innerHTML = data.recipes.map(recipe => `
 							<li>
 								<img src="${recipe.ImageURL}" alt="${recipe.Title}" style="width:50px;height:50px;border-radius:8px;">
 								<span><strong>${recipe.Title}</strong></span>
-								<a href="view_appetizers.html?id=${recipe.RecipeID}">View Recipe</a>
+								<a href="view_recipe.html?id=${recipe.RecipeID}">View Recipe</a>
 							</li>
 						`).join("");
 					} else if (response.status === 404) {
@@ -170,8 +173,10 @@
 					resultsContainer.innerHTML = "<p>An error occurred while searching for recipes. Please try again later.</p>";
 				}
 			});
+		</script>
+		
 
-        </script>
+      
         
         <!-- External Scripts -->
         <script src="assets/js/jquery.min.js"></script>
