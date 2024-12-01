@@ -59,7 +59,7 @@
                 </section>
                 
                 <section>
-                    <h1>Submit a Recipe</h1>
+                    <h2>Submit a Recipe</h2>
                     <form id="add-recipe-form">
                         <div class="form-group">
                             <label for="title">Title</label>
@@ -169,7 +169,7 @@
                 });
     
                 if (response.ok) {
-                    message.textContent = "Recipe added successfully!";
+                    message.textContent = "Recipe added successfully. We will review your submission before posting. Thank you!";
                     document.getElementById("add-recipe-form").reset(); // Clear the form
                 } else {
                     const data = await response.json();
