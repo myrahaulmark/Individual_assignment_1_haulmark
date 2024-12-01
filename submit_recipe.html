@@ -1,0 +1,124 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Add a Recipe - La Mise en Place</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body class="is-preload">
+
+    <!-- Wrapper -->
+    <div id="wrapper">
+
+        <!-- Main -->
+        <div id="main">
+            <div class="inner">
+                <!-- Header -->
+                <header id="header">
+                    <a href="index.html" class="logo"><strong>DEMO</strong> Recipe Database Web App</a>
+                </header>
+
+                <!-- Add Recipe Form -->
+                <section>
+                    <h1>Add a New Recipe</h1>
+                    <form id="add-recipe-form">
+                        <div class="form-group">
+                            <label for="title">Title</label>
+                            <input type="text" id="title" name="title" placeholder="Enter recipe title" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="description">Description</label>
+                            <textarea id="description" name="description" placeholder="Enter recipe description"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="cooking-time">Cooking Time (minutes)</label>
+                            <input type="number" id="cooking-time" name="cooking_time" min="1" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="servings">Servings</label>
+                            <input type="number" id="servings" name="servings" min="1" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="ingredients">Ingredients (comma-separated)</label>
+                            <textarea id="ingredients" name="ingredients" placeholder="e.g., Flour, Sugar, Eggs" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="instructions">Instructions (one step per line)</label>
+                            <textarea id="instructions" name="instructions" placeholder="e.g., Preheat oven to 350°F." required></textarea>
+                        </div>
+                        <button type="submit">Add Recipe</button>
+                    </form>
+                </section>
+
+                <div id="message"></div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div id="sidebar">
+            <div class="inner">
+                <!-- Menu -->
+                <nav id="menu">
+                    <header class="major">
+                        <h2>Menu</h2>
+                    </header>
+                    <ul>
+                        <li><a href="index.html">Homepage</a></li>
+                        <li><a href="account.html">My Account</a></li>
+                        <li><a href="generic.html">Try Something New!</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        document.getElementById("add-recipe-form").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const message = document.getElementById("message");
+            message.textContent = "Submitting your recipe...";
+
+            const formData = {
+                Title: document.getElementById("title").value.trim(),
+                Description: document.getElementById("description").value.trim(),
+                CookingTime: parseInt(document.getElementById("cooking-time").value.trim()),
+                Servings: parseInt(document.getElementById("servings").value.trim()),
+                Ingredients: document.getElementById("ingredients").value.trim().split(",").map(i => i.trim()),
+                Instructions: document.getElementById("instructions").value.trim().split("\n").map(i => i.trim()),
+            };
+
+            try {
+                const response = await fetch("/api/recipes/add", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(formData),
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    message.textContent = "Recipe added successfully!";
+                } else {
+                    const errorData = await response.json();
+                    message.textContent = `Error: ${errorData.error}`;
+                }
+            } catch (error) {
+                console.error("Error adding recipe:", error);
+                message.textContent = "An error occurred while adding the recipe. Please try again.";
+            }
+        });
+    </script>
+
+    <!-- External Scripts -->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/browser.min.js"></script>
+    <script src="assets/js/breakpoints.min.js"></script>
+    <script src="assets/js/util.js"></script>
+    <script src="assets/js/main.js"></script>
+</body>
+</html>
