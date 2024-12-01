@@ -120,15 +120,15 @@
 		<!-- Scripts -->
 		<script>
 			document.addEventListener("DOMContentLoaded", async () => {
-				// Hardcode the Recipe ID for the featured recipe
-				const recipeId = 3115214; 
+				// Hardcoded Recipe ID for the featured recipe
+				const recipeId = 3115214;
 				const apiUrl = `http://localhost:5000/api/recipes/${recipeId}`;
 		
 				try {
 					// Fetch recipe details
 					const response = await fetch(apiUrl);
 					const recipe = await response.json();
-					console.log("API Response:", recipe); // Log the API response for debugging
+					console.log("API Response:", recipe); // Debugging log
 		
 					// Check if the recipe exists
 					if (!recipe || Object.keys(recipe).length === 0) {
@@ -138,7 +138,16 @@
 		
 					// Populate recipe details
 					document.getElementById("recipe-name").textContent = recipe.Title || "No title available";
-					document.getElementById("recipe-image").src = recipe.ImageURL || "";
+					
+					// Hard-code the image if not provided in the recipe
+					const imageElement = document.getElementById("recipe-image");
+					if (recipe.ImageURL) {
+						imageElement.src = recipe.ImageURL;
+					} else {
+						imageElement.src = "images/pic17.jpg"; // Hardcoded fallback image
+					}
+					imageElement.alt = recipe.Title || "Recipe Image";
+		
 					document.getElementById("recipe-category").textContent = recipe.CategoryName || "Uncategorized";
 					document.getElementById("recipe-description").textContent = recipe.Description || "No description available.";
 					document.getElementById("recipe-servings").textContent = recipe.Servings ? `Servings: ${recipe.Servings}` : "";
@@ -172,6 +181,7 @@
 				}
 			});
 		</script>
+		
 		
 
 		<script src="assets/js/jquery.min.js"></script>
