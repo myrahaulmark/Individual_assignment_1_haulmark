@@ -12,51 +12,46 @@
             /* General container styles for the search results list */
             .search-results-list {
                 list-style: none; /* Remove default list styling */
-                counter-reset: recipe-counter 1; /* Initialize counter for numbering */
+                counter-reset: recipe-counter 0; /* Initialize counter for numbering */
                 margin: 0;
                 padding: 0;
             }
 
             /* Styles for each list item */
-            .search-results-list li {
-                display: flex; /* Align items in a row (image + text) */
-                align-items: center; /* Vertically center align items */
-                gap: 15px; /* Space between image and text */
-                border-bottom: 1px solid #ddd; /* Add a divider line between items */
-                padding: 10px 0; /* Spacing around each item */
-                cursor: pointer; /* Change cursor to pointer on hover */
-                transition: background-color 0.3s; /* Smooth background color change on hover */
-                font-size: 1.1em; /* Slightly increase font size */
-				counter-increment: recipe-counter;
-            }
+            /* General container styles */
+							.search-results-list {
+							list-style: none; /* Remove default list styling */
+							counter-reset: recipe-counter; /* Initialize counter for numbering */
+							margin: 0;
+							padding: 0;
+						}
 
-            /* Change background color on hover for better user feedback */
-            .search-results-list li:hover {
-                background-color: #f9f9f9;
-            }
+						.search-results-list li {
+							display: flex;
+							align-items: center;
+							gap: 15px;
+							border-bottom: 1px solid #ddd;
+							padding: 10px 0;
+							cursor: pointer;
+							transition: background-color 0.3s;
+							font-size: 1.1em;
+						}
 
-            /* Style for the image within each list item */
-            .search-results-list li img {
-                width: 50px; /* Set image width */
-                height: 50px; /* Set image height */
-                object-fit: cover; /* Ensure the image maintains aspect ratio and covers the area */
-                border-radius: 8px; /* Slightly round the corners */
-            }
+						.search-results-list li:hover {
+							background-color: #f9f9f9;
+						}
 
-            /* Style for the text span within each list item */
-            .search-results-list li span {
-                counter-increment: recipe-counter; /* Increment counter for each list item */
-                font-size: 1em; /* Set text size */
-                color: #333; /* Dark gray text color */
-            }
+						.search-results-list li img {
+							width: 50px;
+							height: 50px;
+							border-radius: 8px;
+						}
 
-            /* Add numbering before each list item */
-            .search-results-list li::before {
-                content: counter(recipe-counter) ". "; /* Prepend the number with a period */
-                font-weight: bold; /* Make the number bold */
-                margin-right: 10px; /* Space between the number and the content */
-                color: #555; /* Slightly lighter gray for the numbering */
-            }
+						.search-results-list li span {
+							counter-increment: recipe-counter; /* Increment counter for each list item */
+							font-size: 1em;
+							color: #333;
+						}
         </style>
     </head>
     <body class="is-preload">
