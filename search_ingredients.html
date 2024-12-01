@@ -125,43 +125,49 @@
             document.getElementById("search-button").addEventListener("click", async () => {
 				const input = document.getElementById("search-bar").value.trim();
 				const resultsContainer = document.getElementById("search-results");
+
+				// Clear previous results
 				resultsContainer.innerHTML = "";
 
+				// Validate input
 				if (!input) {
-					resultsContainer.innerHTML = "<li>Please enter at least two ingredients.</li>";
+					resultsContainer.innerHTML = "<p>Please enter at least two ingredients.</p>";
 					return;
 				}
 
-				const ingredients = input.split(',').map(item => item.trim()); // Split by commas and trim whitespace
+				const ingredients = input.split(',').map(item => item.trim());
 
 				if (ingredients.length < 2) {
-					resultsContainer.innerHTML = "<li>Please provide at least two ingredients.</li>";
+					resultsContainer.innerHTML = "<p>Please provide at least two ingredients.</p>";
 					return;
 				}
 
 				try {
+					// Construct query string for ingredients
 					const params = new URLSearchParams();
 					ingredients.forEach(ingredient => params.append('ingredients', ingredient));
 
+					// Send fetch request to the API
 					const response = await fetch(`/api/recipes/search-by-ingredients?${params.toString()}`);
 					const data = await response.json();
 
+					// Check response and display results
 					if (response.status === 200 && data.recipes.length > 0) {
 						resultsContainer.innerHTML = data.recipes.map(recipe => `
 							<li>
-								<img src="${recipe.ImageURL}" alt="${recipe.Title}">
+								<img src="${recipe.ImageURL}" alt="${recipe.Title}" style="width:50px;height:50px;border-radius:8px;">
 								<span><strong>${recipe.Title}</strong></span>
 								<a href="view_recipe.html?id=${recipe.RecipeID}">View Recipe</a>
 							</li>
 						`).join("");
 					} else if (response.status === 404) {
-						resultsContainer.innerHTML = "<li>No matching recipes found.</li>";
+						resultsContainer.innerHTML = "<p>No matching recipes found.</p>";
 					} else {
-						resultsContainer.innerHTML = `<li>Error: ${data.error}</li>`;
+						resultsContainer.innerHTML = `<p>Error: ${data.error || 'Unexpected error occurred.'}</p>`;
 					}
 				} catch (error) {
 					console.error("Error fetching recipes:", error);
-					resultsContainer.innerHTML = "<li>An error occurred while searching for recipes.</li>";
+					resultsContainer.innerHTML = "<p>An error occurred while searching for recipes. Please try again later.</p>";
 				}
 			});
 
