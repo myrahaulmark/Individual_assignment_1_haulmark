@@ -25,7 +25,7 @@
                 <section id="add-recipe-guidelines">
                     <div class="box" style="background-color: #f9f9f9; border: 2px solid #ddd; border-radius: 8px; padding: 20px;">
                         <h2 style="font-size: 1.5em; color: #444;">Recipe Submission Guidelines</h2>
-                        <p>Follow these instructions to add your recipe:</p>
+                        <p>All recipes will be reviewed for completeness before they are added to our site. Follow these instructions to add your recipe:</p>
                         <ul style="margin-left: 20px;">
                             <li>Fill out all required fields marked with an asterisk (*).</li>
                             <li>Provide clear, concise recipe titles and descriptions.</li>
@@ -42,7 +42,7 @@
                 </section>
                 
                 <section>
-                    <h1>Add a New Recipe</h1>
+                    <h1>Submit a Recipe</h1>
                     <form id="add-recipe-form">
                         <div class="form-group">
                             <label for="title">Title</label>
@@ -112,14 +112,23 @@
             const message = document.getElementById("message");
             message.textContent = "Submitting your recipe...";
     
-            const formData = {
-                Title: document.getElementById("title").value.trim(),
-                Description: document.getElementById("description").value.trim(),
-                CookingTime: parseInt(document.getElementById("cooking-time").value.trim()),
-                Servings: parseInt(document.getElementById("servings").value.trim()),
-                Ingredients: document.getElementById("ingredients").value.trim().split(",").map(i => i.trim()),
-                Instructions: document.getElementById("instructions").value.trim().split("\n").map(i => i.trim()),
+            const recipeData = {
+                Title: "Spaghetti Bolognese",
+                Description: "A classic Italian dish.",
+                CookingTime: 45,
+                Servings: 4,
+                Ingredients: [
+                    { name: "Pasta" },
+                    { name: "Tomato Sauce" },
+                    { name: "Ground Beef" }
+                ],
+                Instructions: [
+                    "Cook pasta according to package instructions.",
+                    "Brown the ground beef.",
+                    "Mix the sauce and simmer."
+                ]
             };
+
     
             try {
                 const response = await fetch("http://localhost:5000/api/recipes/add", {
@@ -127,7 +136,7 @@
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify(formData),
+                    body: JSON.stringify(recipeData),
                 });
     
                 const responseText = await response.text(); // Get the raw response text
