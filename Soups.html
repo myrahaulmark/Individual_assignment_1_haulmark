@@ -237,11 +237,11 @@
 		<!-- Scripts to call API 1 -->
 			<script>
 				document.addEventListener("DOMContentLoaded", async () => {
-					const apiUrl = "http://localhost:5000/api/recipes/appetizers/random"; // Update with your API endpoint
+					const apiUrl = "http://localhost:5000/api/recipes/soups/random"; // Update with your API endpoint
 					const recipesContainer = document.getElementById("recipe-cards-container");
 
 					try {
-						// Fetch random appetizer recipes
+						// Fetch random soup recipes
 						const response = await fetch(apiUrl);
 						const data = await response.json();
 
