@@ -1,80 +1,78 @@
 <!DOCTYPE HTML>
 <html>
-	<head>
-		<title>Search by Ingredients - La Mise en Place</title>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="assets/css/main.css" />
-		<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+<head>
+    <title>Search by Ingredients - La Mise en Place</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body class="is-preload">
 
-	</head>
-	<body class="is-preload">
+    <!-- Wrapper -->
+    <div id="wrapper">
+        <!-- Main -->
+        <div id="main">
+            <div class="inner">
+                <!-- Header -->
+                <header id="header">
+                    <a href="index.html" class="logo"><strong>DEMO</strong> Recipe Database Web App </a>
+                    <ul class="icons">
+                        <li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
+                        <li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
+                        <li><a href="#" class="icon brands fa-snapchat-ghost"><span class="label">Snapchat</span></a></li>
+                        <li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
+                        <li><a href="#" class="icon brands fa-medium-m"><span class="label">Medium</span></a></li>
+                    </ul>
+                </header>
 
-		<!-- Wrapper -->
-		<div id="wrapper">
-	
+                <!-- Search Section -->
+                <section>
+                    <h1>Search by Ingredients on Hand</h1>
+                    <p>Search by what you have on hand. For example, if you have chicken, lettuce, or squash, use those items to find recipes.</p>
+                    <input type="text" id="search-bar" placeholder="Add up to three ingredients, e.g., 'chicken, lettuce, squash'..." />
+                    <button id="search-button">Search</button>
 
-			<!-- Main -->
-			<div id="main">
-				<div class="inner">
-					<!-- Header -->
-					<header id="header">
-						<a href="index.html" class="logo"><strong>DEMO </strong>Recipe Database Web App </a>
-						<ul class="icons">
-							<li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
-							<li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
-							<li><a href="#" class="icon brands fa-snapchat-ghost"><span class="label">Snapchat</span></a></li>
-							<li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
-							<li><a href="#" class="icon brands fa-medium-m"><span class="label">Medium</span></a></li>
-						</ul>
-					</header>
-					<!-- Search Section -->
-					<section>
-						<h1>Ingredient Search</h1>
-						<p></p>Search by what you have on hand. For example, if you have chicken, lettuce or some leftover squash use those items as your search terms to find recipes that you can use and get a head start on your meal prep. </p>
-						<input type="text" id="search-bar" placeholder="Add a maximum of three ingredients like 'chicken, lettuce, squash'..." />
-						<button id="search-button">Search</button>
+                    <!-- Search Results -->
+                    <div id="search-results">
+                        <!-- Recipes will load dynamically here -->
+                    </div>
+                </section>
+            </div>
+        </div>
 
-						<!-- Search Results -->
-						<div class="search-results" id="search-results">
-							<!-- Recipes will load dynamically here -->
-						</div>
-					</section>
+        <!-- Sidebar -->
+        <div id="sidebar">
+            <div class="inner">
+                <!-- Menu -->
+                <nav id="menu">
+                    <header class="major">
+                        <h2>Menu</h2>
+                    </header>
+                    <ul>
+                        <li><a href="index.html">Homepage</a></li>
+                        <li><a href="account.html">My Account</a></li>
+                        <li><a href="generic.html">Try Something New!</a></li>
+                        <li>
+                            <span class="opener">Categories Submenu</span>
+                            <ul>
+                                <li><a href="appetizers.html">Appetizers</a></li>
+                                <li><a href="Soups.html">Soups</a></li>
+                                <li><a href="#">Desserts</a></li>
+                                <li><a href="#">Beef</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
 
-					 
-
-			<!-- Sidebar -->
-			<div id="sidebar">
-				<div class="inner">
-					<!-- Menu -->
-					<nav id="menu">
-						<header class="major">
-							<h2>Menu</h2>
-						</header>
-						<ul>
-							<li><a href="index.html">Homepage</a></li>
-							<li><a href="account.html">My Account</a></li>
-							<li><a href="generic.html">Try Something New!</a></li>
-							<li>
-								<span class="opener">Categories Submenu</span>
-								<ul>
-									<li><a href="appetizers.html">Appetizers</a></li>
-									<li><a href="soups.html">Soups</a></li>
-									<li><a href="#">Desserts</a></li>
-									<li><a href="#">Beef</a></li>
-								</ul>
-							</li>
-						</ul>
-					</nav>
-				</div>
-			</div>
-		</div>
-
-		<!-- Scripts -->
-			<script>
-				document.getElementById("search-button").addEventListener("click", async () => {
-            const input = document.getElementById("ingredient-input").value.trim();
-            const resultsContainer = document.getElementById("results-container");
+    <!-- Scripts -->
+    <script>
+        document.getElementById("search-button").addEventListener("click", async () => {
+            const input = document.getElementById("search-bar").value.trim();
+            const resultsContainer = document.getElementById("search-results");
             resultsContainer.innerHTML = "";
 
             if (!input) {
@@ -90,7 +88,7 @@
             }
 
             try {
-                const response = await fetch(`/api/recipes/search-by-ingredients?${new URLSearchParams({ ingredients })}`);
+                const response = await fetch(`/api/recipes/search-by-ingredients?ingredients=${encodeURIComponent(ingredients.join(','))}`);
                 const data = await response.json();
 
                 if (response.status === 200 && data.recipes.length > 0) {
@@ -111,19 +109,13 @@
                 resultsContainer.innerHTML = "<p>An error occurred while searching for recipes.</p>";
             }
         });
-
-		// Function to handle viewing a recipe (redirect to recipe details page)
-		function viewRecipe(recipeId) {
-			window.location.href = `view_appetizers.html?id=${recipeId}`;
-		}
-
-	</script>
-		
-			<!-- External Scripts -->
-			<script src="assets/js/jquery.min.js"></script>
-			<script src="assets/js/browser.min.js"></script>
-			<script src="assets/js/breakpoints.min.js"></script>
-			<script src="assets/js/util.js"></script>
-			<script src="assets/js/main.js"></script>
-	</body>
+    </script>
+    
+    <!-- External Scripts -->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/browser.min.js"></script>
+    <script src="assets/js/breakpoints.min.js"></script>
+    <script src="assets/js/util.js"></script>
+    <script src="assets/js/main.js"></script>
+</body>
 </html>
