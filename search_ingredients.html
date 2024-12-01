@@ -12,7 +12,7 @@
             /* General container styles for the search results list */
             .search-results-list {
                 list-style: none; /* Remove default list styling */
-                counter-reset: recipe-counter; /* Initialize counter for numbering */
+                counter-reset: recipe-counter 1; /* Initialize counter for numbering */
                 margin: 0;
                 padding: 0;
             }
@@ -27,6 +27,7 @@
                 cursor: pointer; /* Change cursor to pointer on hover */
                 transition: background-color 0.3s; /* Smooth background color change on hover */
                 font-size: 1.1em; /* Slightly increase font size */
+				counter-increment: recipe-counter;
             }
 
             /* Change background color on hover for better user feedback */
