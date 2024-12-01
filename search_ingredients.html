@@ -82,7 +82,7 @@
                     <section>
                         <h1>Ingredient Search</h1>
                         <p>Search by what you have on hand. For example, if you have chicken, lettuce, or squash, use those items as your search terms.</p>
-                        <input type="text" id="search-bar" placeholder="Add a maximum of three ingredients like 'chicken, lettuce, squash'..." />
+                        <input type="text" id="search-bar" placeholder="Add a maximum of three ingredients like 'chicken, lettuce, salt'..." />
                         <button id="search-button">Search</button>
 
                         <!-- Search Results -->
@@ -160,7 +160,7 @@
 							<li>
 								<img src="${recipe.ImageURL}" alt="${recipe.Title}" style="width:50px;height:50px;border-radius:8px;">
 								<span><strong>${recipe.Title}</strong></span>
-								<a href="view_recipe.html?id=${recipe.RecipeID}">View Recipe</a>
+								<a href="view_appetizers.html?id=${recipe.RecipeID}">View Recipe</a>
 							</li>
 						`).join("");
 					} else if (response.status === 404) {
