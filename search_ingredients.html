@@ -1,121 +1,177 @@
 <!DOCTYPE HTML>
 <html>
-<head>
-    <title>Search by Ingredients - La Mise en Place</title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-    <link rel="stylesheet" href="assets/css/main.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
-</head>
-<body class="is-preload">
+    <head>
+        <title>Search by Ingredients - La Mise en Place</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+        
+        <!-- Custom Styles for Search Results -->
+        <style>
+            /* General container styles for the search results list */
+            .search-results-list {
+                list-style: none; /* Remove default list styling */
+                counter-reset: recipe-counter; /* Initialize counter for numbering */
+                margin: 0;
+                padding: 0;
+            }
 
-    <!-- Wrapper -->
-    <div id="wrapper">
-        <!-- Main -->
-        <div id="main">
-            <div class="inner">
-                <!-- Header -->
-                <header id="header">
-                    <a href="index.html" class="logo"><strong>DEMO</strong> Recipe Database Web App </a>
-                    <ul class="icons">
-                        <li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
-                        <li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
-                        <li><a href="#" class="icon brands fa-snapchat-ghost"><span class="label">Snapchat</span></a></li>
-                        <li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
-                        <li><a href="#" class="icon brands fa-medium-m"><span class="label">Medium</span></a></li>
-                    </ul>
-                </header>
+            /* Styles for each list item */
+            .search-results-list li {
+                display: flex; /* Align items in a row (image + text) */
+                align-items: center; /* Vertically center align items */
+                gap: 15px; /* Space between image and text */
+                border-bottom: 1px solid #ddd; /* Add a divider line between items */
+                padding: 10px 0; /* Spacing around each item */
+                cursor: pointer; /* Change cursor to pointer on hover */
+                transition: background-color 0.3s; /* Smooth background color change on hover */
+                font-size: 1.1em; /* Slightly increase font size */
+            }
 
-                <!-- Search Section -->
-                <section>
-                    <h1>Search by Ingredients on Hand</h1>
-                    <p>Search by what you have on hand. For example, if you have chicken, lettuce, or squash, use those items to find recipes.</p>
-                    <input type="text" id="search-bar" placeholder="Add up to three ingredients, e.g., 'chicken, lettuce, squash'..." />
-                    <button id="search-button">Search</button>
+            /* Change background color on hover for better user feedback */
+            .search-results-list li:hover {
+                background-color: #f9f9f9;
+            }
 
-                    <!-- Search Results -->
-                    <div id="search-results">
-                        <!-- Recipes will load dynamically here -->
-                    </div>
-                </section>
-            </div>
-        </div>
+            /* Style for the image within each list item */
+            .search-results-list li img {
+                width: 50px; /* Set image width */
+                height: 50px; /* Set image height */
+                object-fit: cover; /* Ensure the image maintains aspect ratio and covers the area */
+                border-radius: 8px; /* Slightly round the corners */
+            }
 
-        <!-- Sidebar -->
-        <div id="sidebar">
-            <div class="inner">
-                <!-- Menu -->
-                <nav id="menu">
-                    <header class="major">
-                        <h2>Menu</h2>
+            /* Style for the text span within each list item */
+            .search-results-list li span {
+                counter-increment: recipe-counter; /* Increment counter for each list item */
+                font-size: 1em; /* Set text size */
+                color: #333; /* Dark gray text color */
+            }
+
+            /* Add numbering before each list item */
+            .search-results-list li::before {
+                content: counter(recipe-counter) ". "; /* Prepend the number with a period */
+                font-weight: bold; /* Make the number bold */
+                margin-right: 10px; /* Space between the number and the content */
+                color: #555; /* Slightly lighter gray for the numbering */
+            }
+        </style>
+    </head>
+    <body class="is-preload">
+
+        <!-- Wrapper -->
+        <div id="wrapper">
+
+            <!-- Main -->
+            <div id="main">
+                <div class="inner">
+                    <!-- Header -->
+                    <header id="header">
+                        <a href="index.html" class="logo"><strong>DEMO</strong> Recipe Database Web App</a>
+                        <ul class="icons">
+                            <li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
+                            <li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
+                            <li><a href="#" class="icon brands fa-snapchat-ghost"><span class="label">Snapchat</span></a></li>
+                            <li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
+                            <li><a href="#" class="icon brands fa-medium-m"><span class="label">Medium</span></a></li>
+                        </ul>
                     </header>
-                    <ul>
-                        <li><a href="index.html">Homepage</a></li>
-                        <li><a href="account.html">My Account</a></li>
-                        <li><a href="generic.html">Try Something New!</a></li>
-                        <li>
-                            <span class="opener">Categories Submenu</span>
-                            <ul>
-                                <li><a href="appetizers.html">Appetizers</a></li>
-                                <li><a href="Soups.html">Soups</a></li>
-                                <li><a href="#">Desserts</a></li>
-                                <li><a href="#">Beef</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </nav>
+
+                    <!-- Search Section -->
+                    <section>
+                        <h1>Ingredient Search</h1>
+                        <p>Search by what you have on hand. For example, if you have chicken, lettuce, or squash, use those items as your search terms.</p>
+                        <input type="text" id="search-bar" placeholder="Add a maximum of three ingredients like 'chicken, lettuce, squash'..." />
+                        <button id="search-button">Search</button>
+
+                        <!-- Search Results -->
+                        <ul class="search-results-list" id="search-results">
+                            <!-- Recipes will dynamically load here -->
+                        </ul>
+                    </section>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div id="sidebar">
+                <div class="inner">
+                    <!-- Menu -->
+                    <nav id="menu">
+                        <header class="major">
+                            <h2>Menu</h2>
+                        </header>
+                        <ul>
+                            <li><a href="index.html">Homepage</a></li>
+                            <li><a href="account.html">My Account</a></li>
+                            <li><a href="generic.html">Try Something New!</a></li>
+                            <li>
+                                <span class="opener">Categories Submenu</span>
+                                <ul>
+                                    <li><a href="appetizers.html">Appetizers</a></li>
+                                    <li><a href="soups.html">Soups</a></li>
+                                    <li><a href="#">Desserts</a></li>
+                                    <li><a href="#">Beef</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- Scripts -->
-    <script>
-        document.getElementById("search-button").addEventListener("click", async () => {
-            const input = document.getElementById("search-bar").value.trim();
-            const resultsContainer = document.getElementById("search-results");
-            resultsContainer.innerHTML = "";
+        <!-- Scripts -->
+        <script>
+            document.getElementById("search-button").addEventListener("click", async () => {
+				const input = document.getElementById("search-bar").value.trim();
+				const resultsContainer = document.getElementById("search-results");
+				resultsContainer.innerHTML = "";
 
-            if (!input) {
-                resultsContainer.innerHTML = "<p>Please enter at least two ingredients.</p>";
-                return;
-            }
+				if (!input) {
+					resultsContainer.innerHTML = "<li>Please enter at least two ingredients.</li>";
+					return;
+				}
 
-            const ingredients = input.split(',').map(item => item.trim());
+				const ingredients = input.split(',').map(item => item.trim()); // Split by commas and trim whitespace
 
-            if (ingredients.length < 2) {
-                resultsContainer.innerHTML = "<p>Please provide at least two ingredients.</p>";
-                return;
-            }
+				if (ingredients.length < 2) {
+					resultsContainer.innerHTML = "<li>Please provide at least two ingredients.</li>";
+					return;
+				}
 
-            try {
-                const response = await fetch(`/api/recipes/search-by-ingredients?ingredients=${encodeURIComponent(ingredients.join(','))}`);
-                const data = await response.json();
+				try {
+					const params = new URLSearchParams();
+					ingredients.forEach(ingredient => params.append('ingredients', ingredient));
 
-                if (response.status === 200 && data.recipes.length > 0) {
-                    resultsContainer.innerHTML = data.recipes.map(recipe => `
-                        <div class="recipe-card">
-                            <img src="${recipe.ImageURL}" alt="${recipe.Title}">
-                            <h3>${recipe.Title}</h3>
-                            <p><a href="view_recipe.html?id=${recipe.RecipeID}">View Recipe</a></p>
-                        </div>
-                    `).join("");
-                } else if (response.status === 404) {
-                    resultsContainer.innerHTML = "<p>No matching recipes found.</p>";
-                } else {
-                    resultsContainer.innerHTML = `<p>Error: ${data.error}</p>`;
-                }
-            } catch (error) {
-                console.error("Error fetching recipes:", error);
-                resultsContainer.innerHTML = "<p>An error occurred while searching for recipes.</p>";
-            }
-        });
-    </script>
-    
-    <!-- External Scripts -->
-    <script src="assets/js/jquery.min.js"></script>
-    <script src="assets/js/browser.min.js"></script>
-    <script src="assets/js/breakpoints.min.js"></script>
-    <script src="assets/js/util.js"></script>
-    <script src="assets/js/main.js"></script>
-</body>
+					const response = await fetch(`/api/recipes/search-by-ingredients?${params.toString()}`);
+					const data = await response.json();
+
+					if (response.status === 200 && data.recipes.length > 0) {
+						resultsContainer.innerHTML = data.recipes.map(recipe => `
+							<li>
+								<img src="${recipe.ImageURL}" alt="${recipe.Title}">
+								<span><strong>${recipe.Title}</strong></span>
+								<a href="view_recipe.html?id=${recipe.RecipeID}">View Recipe</a>
+							</li>
+						`).join("");
+					} else if (response.status === 404) {
+						resultsContainer.innerHTML = "<li>No matching recipes found.</li>";
+					} else {
+						resultsContainer.innerHTML = `<li>Error: ${data.error}</li>`;
+					}
+				} catch (error) {
+					console.error("Error fetching recipes:", error);
+					resultsContainer.innerHTML = "<li>An error occurred while searching for recipes.</li>";
+				}
+			});
+
+        </script>
+        
+        <!-- External Scripts -->
+        <script src="assets/js/jquery.min.js"></script>
+        <script src="assets/js/browser.min.js"></script>
+        <script src="assets/js/breakpoints.min.js"></script>
+        <script src="assets/js/util.js"></script>
+        <script src="assets/js/main.js"></script>
+    </body>
 </html>
