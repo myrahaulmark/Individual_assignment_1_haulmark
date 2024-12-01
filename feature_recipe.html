@@ -141,15 +141,18 @@
 					// Populate recipe details
 					document.getElementById("recipe-title").textContent = recipe.Title || "No title available";
 		
-					// Hard-code the image if not provided in the recipe
+					/// Hard-code the image if the placeholder is detected or if no image is provided
 					const imageElement = document.getElementById("recipe-image");
-					if (recipe.ImageURL) {
-						imageElement.src = recipe.ImageURL;
+
+					// Define your placeholder URL
+					const placeholderURL = "https://raw.githubusercontent.com/myrahaulmark/Recipe_UI_GA4/main/images/miseenplace.png";
+
+					if (!recipe.ImageURL || recipe.ImageURL === placeholderURL) {
+						imageElement.src = "images/pic17.jpg"; // Use the hardcoded fallback image
 					} else {
-						imageElement.src = "images/pic17.jpg"; // Hardcoded fallback image
+						imageElement.src = recipe.ImageURL; // Use the actual image URL from the recipe
 					}
-					imageElement.alt = recipe.Title || "Recipe Image";
-		
+
 					document.getElementById("recipe-category").textContent = recipe.CategoryName || "Uncategorized";
 					document.getElementById("recipe-description").textContent = recipe.Description || "No description available.";
 		
