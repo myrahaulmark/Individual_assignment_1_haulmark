@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 	<head>
-		<title>Appetizers - La Mise en Place</title>
+		<title>Soups - La Mise en Place</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
@@ -90,15 +90,71 @@
 					</header>
 					<!-- Search Section -->
 					<section>
-						<h1>Soups</h1>soup recipes based on ingredients, dietary preferences, or keywords.</p>
-						<input type="text" id="search-bar" placeholder="Search appetizers..." />
+						<h1>Search Soups</h1>
+						<input type="text" id="search-bar" placeholder="Search for soups by entering a keyword...like squash..." />
 						<button id="search-button">Search</button>
+						<ol id="search-results" class="search-results-list">
+							<!-- Search results will be dynamically populated here -->
+						</ol>
+				
+						<style>
+							/* General container styles */
+							.search-results-list {
+							list-style: none; /* Remove default list styling */
+							counter-reset: recipe-counter; /* Initialize counter for numbering */
+							margin: 0;
+							padding: 0;
+						}
 
-						<!-- Search Results -->
-						<div class="search-results" id="search-results">
-							<!-- Recipes will load dynamically here -->
-						</div>
+						.search-results-list li {
+							display: flex;
+							align-items: center;
+							gap: 15px;
+							border-bottom: 1px solid #ddd;
+							padding: 10px 0;
+							cursor: pointer;
+							transition: background-color 0.3s;
+							font-size: 1.1em;
+						}
+
+						.search-results-list li:hover {
+							background-color: #f9f9f9;
+						}
+
+						.search-results-list li img {
+							width: 50px;
+							height: 50px;
+							border-radius: 8px;
+						}
+
+						.search-results-list li span {
+							counter-increment: recipe-counter; /* Increment counter for each list item */
+							font-size: 1em;
+							color: #333;
+						}
+						
+							/* Search input styles */
+							#search-bar {
+								width: calc(100% - 40px); /* Adjusting for padding/margin */
+								padding: 10px;
+								font-size: 1em;
+								margin-bottom: 10px;
+								border: 1px solid #ddd;
+								border-radius: 8px;
+							}
+						
+							/* Placeholder for empty search results */
+							#search-results p {
+								color: #666;
+								font-style: italic;
+								margin-top: 20px;
+								text-align: center;
+							}
+						</style>
+						
+						
 					</section>
+					
 
 					 <!-- Random Recipes Section -->
 					 <section id="random-recipes">
@@ -142,7 +198,7 @@
 								margin-bottom: 10px;
 							}
 						</style>
-						<h2>We thought you might want to try these awesome appetizers...</h2>
+						<h2>Or you might want to try these yummy soup recipes...</h2>
 						<div id="recipe-cards-container" class="recipe-cards-container">
 							<!-- Random recipes will be dynamically loaded here -->
 						</div>
@@ -162,12 +218,13 @@
 							<li><a href="index.html">Homepage</a></li>
 							<li><a href="account.html">My Account</a></li>
 							<li><a href="generic.html">Try Something New!</a></li>
+							<li><a href="search_ingredients.html">Search by Ingredients</a></li>
 							<li>
 								<span class="opener">Categories Submenu</span>
 								<ul>
 									<li><a href="appetizers.html">Appetizers</a></li>
 									<li><a href="Soups.html">Soups</a></li>
-									<li><a href="#">Desserts</a></li>
+									<li><a href="desserts.html">Desserts</a></li>
 									<li><a href="#">Beef</a></li>
 								</ul>
 							</li>
@@ -177,10 +234,11 @@
 			</div>
 		</div>
 
-		<!-- Scripts -->
+		<!-- Scripts to call APIs -->
+		<!-- Scripts to call API 1 -->
 			<script>
 				document.addEventListener("DOMContentLoaded", async () => {
-					const apiUrl = "http://localhost:5000/api/recipes/appetizers/random"; // Update with your API endpoint
+					const apiUrl = "http://localhost:5000/api/recipes/soups/random"; // Update with your API endpoint
 					const recipesContainer = document.getElementById("recipe-cards-container");
 
 					try {
@@ -210,8 +268,52 @@
 		function viewRecipe(recipeId) {
 			window.location.href = `view_appetizers.html?id=${recipeId}`;
 		}
+		</script>
 
-	</script>
+<!-- Scripts to call API 2 -->
+		<script>
+    		document.getElementById("search-button").addEventListener("click", async () => {
+				const keyword = document.getElementById("search-bar").value.trim();
+				const searchResultsContainer = document.getElementById("search-results");
+
+				if (!keyword) {
+					searchResultsContainer.innerHTML = "<p>Please enter a search term.</p>";
+					return;
+				}
+
+				const apiUrl = `http://localhost:5000/api/recipes/soups/search?q=${encodeURIComponent(keyword)}`;
+
+				try {
+					const response = await fetch(apiUrl);
+					const data = await response.json();
+
+					if (data.recipes && data.recipes.length > 0) {
+						searchResultsContainer.innerHTML = data.recipes
+						.map((recipe, index) => `
+							<li onclick="viewRecipe(${recipe.RecipeID})">
+								<div>
+									<img src="${recipe.ImageURL}" alt="${recipe.Title}" />
+									<span>${index + 1}. ${recipe.Title}</span>
+								</div>
+							</li>
+						`).join('');
+
+					} else {
+						searchResultsContainer.innerHTML = "<p>No matching soup recipes found.</p>";
+					}
+				} catch (error) {
+					console.error("Error fetching search results:", error);
+					searchResultsContainer.innerHTML = "<p>Our development server is taking a little nap. Please try again later.</p>";
+				}
+			});
+
+		// Function to navigate to the recipe details page
+		function viewRecipe(recipeId) {
+			window.location.href = `view_appetizers.html?id=${recipeId}`;
+		}
+		</script>
+
+	
 		
 			<!-- External Scripts -->
 			<script src="assets/js/jquery.min.js"></script>

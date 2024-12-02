@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 	<head>
-		<title>Appetizers - La Mise en Place</title>
+		<title>Desserts - La Mise en Place</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
@@ -90,8 +90,8 @@
 					</header>
 					<!-- Search Section -->
 					<section>
-						<h1>Search Appetizers</h1>
-						<input type="text" id="search-bar" placeholder="Search for appetizers by entering a keyword...like cheese..." />
+						<h1>Search Desserts</h1>
+						<input type="text" id="search-bar" placeholder="Search for desserts by entering a keyword...like chocolate..." />
 						<button id="search-button">Search</button>
 						<ol id="search-results" class="search-results-list">
 							<!-- Search results will be dynamically populated here -->
@@ -198,7 +198,7 @@
 								margin-bottom: 10px;
 							}
 						</style>
-						<h2>Or you might want to try these awesome appetizers...</h2>
+						<h2>Or you might want to try one of these delightful desserts...</h2>
 						<div id="recipe-cards-container" class="recipe-cards-container">
 							<!-- Random recipes will be dynamically loaded here -->
 						</div>
@@ -238,7 +238,7 @@
 		<!-- Scripts to call API 1 -->
 			<script>
 				document.addEventListener("DOMContentLoaded", async () => {
-					const apiUrl = "http://localhost:5000/api/recipes/appetizers/random"; // Update with your API endpoint
+					const apiUrl = "http://localhost:5000/api/recipes/desserts/random"; // Update with your API endpoint
 					const recipesContainer = document.getElementById("recipe-cards-container");
 
 					try {
@@ -281,7 +281,7 @@
 					return;
 				}
 
-				const apiUrl = `http://localhost:5000/api/recipes/appetizers/search?q=${encodeURIComponent(keyword)}`;
+				const apiUrl = `http://localhost:5000/api/recipes/desserts/search?q=${encodeURIComponent(keyword)}`;
 
 				try {
 					const response = await fetch(apiUrl);
@@ -299,7 +299,7 @@
 						`).join('');
 
 					} else {
-						searchResultsContainer.innerHTML = "<p>No matching appetizers found.</p>";
+						searchResultsContainer.innerHTML = "<p>No matching dessert recipes found.</p>";
 					}
 				} catch (error) {
 					console.error("Error fetching search results:", error);

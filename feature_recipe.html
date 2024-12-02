@@ -29,17 +29,20 @@
 					</header>
 
 					<!-- Recipe Section -->
-					<section>
+					<section id="recipe-container">
 						<header class="main">
 							<h1 id="recipe-title">Recipe Title</h1>
 						</header>
 						<img id="recipe-image" src="" alt="Recipe Image" style="max-width: 100%; height: auto;" />
 						<p><strong>Category:</strong> <span id="recipe-category"></span></p>
+						<h2>Description</h2>
+						<p id="recipe-description">No description available.</p>
 						<h2>Ingredients</h2>
 						<ul id="ingredients-list"></ul>
 						<h2>Instructions</h2>
-						<p id="recipe-instructions"></p>
+						<ol id="recipe-instructions"></ol>
 					</section>
+					
 
 				</div>
 			</div>
@@ -80,16 +83,30 @@
 					<!-- Section -->
 					<section>
 						<header class="major">
+							<h2>Want to submit a recipe?</h2>
+						</header>
+						<div class="mini-posts">
+							<article>
+								<a href="#" class="image"><img src="images/recipe_submit.jpg" alt="Our pick of the season!" /></a>
+								<p>Submit a favorite recipe to our site and share with others!</p>
+							</article>
+						</div>
+						<ul class="actions">
+							<li><a href="submit_recipe.html" class="button">Submit Recipe</a></li>
+						</ul>
+					</section>
+					<section>
+						<header class="major">
 							<h2>Featured Recipe</h2>
 						</header>
 						<div class="mini-posts">
 							<article>
-								<a href="#" class="image"><img src="images/pic17_main.jpg" alt="Our pick of the season!" /></a>
-								<p>Get ready for the holidays with this feast!</p>
+								<a href="feature_recipe.html" class="image"><img src="images/pic17_main.jpg" alt="Indian Tacos Ojibway Style" /></a>
+								<p>Try this variation for Taco Tuesday!</p>
 							</article>
 						</div>
 						<ul class="actions">
-							<li><a href="#" class="button">More</a></li>
+							<li><a href="feature_recipe.html" class="button">More</a></li>
 						</ul>
 					</section>
 
@@ -106,71 +123,55 @@
 		<!-- Scripts -->
 		<script>
 			document.addEventListener("DOMContentLoaded", async () => {
-				const params = new URLSearchParams(window.location.search);
-				const recipeId = params.get("id");
-				const category = params.get("category"); // Optional: Determine context if needed
-
-				if (!recipeId) {
-					document.getElementById('recipe-container').innerHTML = '<p>Recipe ID is missing. Unable to load data.</p>';
-					return;
-				}
-
-				// Define API endpoints dynamically
-				let apiUrl;
-
-				// If you have different endpoints for categories
-				if (category === 'appetizers') {
-					apiUrl = `http://localhost:5000/api/recipes/appetizers/${recipeId}`;
-				} else {
-					// Default API or MealDB as fallback
-					apiUrl = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${recipeId}`;
-				}
-
+				// Hardcoded API URL for the featured recipe
+				const apiUrl = "http://localhost:5000/api/recipes/3115214";
+		
 				try {
 					// Fetch recipe details
 					const response = await fetch(apiUrl);
-					const data = await response.json();
-
-					// Check if using MealDB or custom API
-					const recipe = data.meals ? data.meals[0] : data;
-
+					const recipe = await response.json();
+					console.log("API Response:", recipe); // Debugging log
+		
+					// Check if the recipe exists
+					if (!recipe || Object.keys(recipe).length === 0) {
+						document.getElementById("recipe-container").innerHTML = "<p>Featured recipe not found.</p>";
+						return;
+					}
+		
 					// Populate recipe details
-					document.getElementById('recipe-title').textContent = recipe.RecipeName || recipe.strMeal;
-					document.getElementById('recipe-image').src = recipe.ImageURL || recipe.strMealThumb;
-					document.getElementById('recipe-category').textContent = recipe.CategoryName || recipe.strCategory;
-					document.getElementById('recipe-instructions').textContent = recipe.Instructions || recipe.strInstructions;
+					document.getElementById("recipe-title").textContent = recipe.Title || "No title available";
+		
+					// Hard-code the image the image for now but later have it come from database
+					const imageElement = document.getElementById("recipe-image");
+					imageElement.src = "images/pic17_main.jpg"; // Always use the hardcoded image
+					imageElement.alt = recipe.Title || "Recipe Image";
 
-					// Populate ingredients list
-					const ingredientsList = document.getElementById('ingredients-list');
-					if (recipe.ingredients) {
-						// For your API
-						ingredientsList.innerHTML = recipe.ingredients
-							.map(ingredient => `<li>${ingredient}</li>`)
-							.join('');
+
+					document.getElementById("recipe-category").textContent = recipe.CategoryName || "Uncategorized";
+					document.getElementById("recipe-description").textContent = recipe.Description || "No description available.";
+		
+					// Populate ingredients
+					const ingredientsList = document.getElementById("ingredients-list");
+					if (recipe.Ingredients && recipe.Ingredients.length > 0) {
+						ingredientsList.innerHTML = recipe.Ingredients.map(ingredient => `<li>${ingredient}</li>`).join("");
 					} else {
-						// For MealDB API
-						for (let i = 1; i <= 20; i++) {
-							const ingredient = recipe[`strIngredient${i}`];
-							const measure = recipe[`strMeasure${i}`];
-							if (ingredient && ingredient.trim() !== '') {
-								const listItem = document.createElement('li');
-								listItem.textContent = `${measure} ${ingredient}`;
-								ingredientsList.appendChild(listItem);
-							}
-						}
+						ingredientsList.innerHTML = "<p>No ingredients listed.</p>";
+					}
+		
+					// Populate instructions
+					const instructionsList = document.getElementById("recipe-instructions");
+					if (recipe.Instructions && recipe.Instructions.length > 0) {
+						instructionsList.innerHTML = recipe.Instructions.map(step => `<li>${step}</li>`).join("");
+					} else {
+						instructionsList.innerHTML = "<p>No instructions available.</p>";
 					}
 				} catch (error) {
-					console.error('Error fetching recipe details:', error);
-					document.getElementById('recipe-container').innerHTML = '<p>Error loading recipe details. Please try again later.</p>';
+					console.error("Error fetching recipe details:", error);
+					document.getElementById("recipe-container").innerHTML = "<p>Error loading featured recipe. Please try again later.</p>";
 				}
 			});
-			// funtion to make the view.html dynamic
-			function viewRecipe(recipeId) {
-    		window.location.href = `view.html?id=${recipeId}&category=appetizers`;
-		}
-
-
 		</script>
+		
 		<script src="assets/js/jquery.min.js"></script>
 		<script src="assets/js/browser.min.js"></script>
 		<script src="assets/js/breakpoints.min.js"></script>

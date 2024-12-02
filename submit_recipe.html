@@ -1,0 +1,195 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Submit a Recipe - La Mise en Place</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <style>
+        /* General styles for form inputs */
+        form input[type="text"],form input[type="text"],
+        form input[type="number"],
+        form textarea {
+            /* Add your custom styles here */
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+            
+
+            
+    </style>
+</head>
+<body class="is-preload">
+
+    <!-- Wrapper -->
+    <div id="wrapper">
+
+        <!-- Main -->
+        <div id="main">
+            <div class="inner">
+                <!-- Header -->
+                <header id="header">
+                    <a href="index.html" class="logo"><strong>DEMO</strong> Recipe Database Web App</a>
+                </header>
+
+                <!-- Add Recipe Form -->
+                <section id="add-recipe-guidelines">
+                    <div class="box" style="background-color: #f9f9f9; border: 2px solid #ddd; border-radius: 8px; padding: 20px;">
+                        <h2 style="font-size: 1.5em; color: #444;">Recipe Submission Guidelines</h2>
+                        <p>All recipes will be reviewed for completeness before they are added to our site. Follow these instructions to add your recipe:</p>
+                        <ul style="margin-left: 20px;">
+                            <li>Fill out all required fields marked with an asterisk (*).</li>
+                            <li>Provide clear, concise recipe titles and descriptions.</li>
+                            <li>Use appropriate serving sizes and preparation times.</li>
+                            <li>For ingredients and instructions:
+                                <ul>
+                                    <li>List ingredients in the order they are used.</li>
+                                    <li>Provide clear step-by-step instructions.</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                </section>
+                
+                <section>
+                    <h2>Submit a Recipe</h2>
+                    <form id="add-recipe-form">
+                        <div class="form-group">
+                            <label for="title">Title</label>
+                            <input type="text" id="title" name="title" placeholder="Enter recipe title" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="description">Description</label>
+                            <textarea id="description" name="description" placeholder="Enter recipe description"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="cooking-time">Cooking Time (minutes)</label>
+                            <input type="number" id="cooking-time" name="cooking_time" min="1" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="servings">Servings</label>
+                            <input type="number" id="servings" name="servings" min="1" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="ingredients">Ingredients (comma-separated)</label>
+                            <textarea id="ingredients" name="ingredients" placeholder="e.g., Flour, Sugar, Eggs" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="instructions">Instructions (one step per line)</label>
+                            <textarea id="instructions" name="instructions" placeholder="e.g., Preheat oven to 350°F." required></textarea>
+                        </div>
+                        <button type="submit">Submit Recipe for Review</button>
+                    </form>
+                </section>
+
+                <div id="message"></div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div id="sidebar">
+            <div class="inner">
+                <!-- Menu -->
+                <nav id="menu">
+                    <header class="major">
+                        <h2>Menu</h2>
+                    </header>
+                    <ul>
+                        <li><a href="index.html">Homepage</a></li>
+                        <li><a href="account.html">My Account</a></li>
+                        <li><a href="generic.html">Try Something New!</a></li>
+                        <li><a href="search_ingredients.html">Search by Ingredients</a></li>
+                        <li>
+                            <span class="opener">Categories Submenu</span>
+                            <ul>
+                                <li><a href="appetizers.html">Appetizers</a></li>
+                                <li><a href="Soups.html">Soups</a></li>
+                                <li><a href="desserts.html">Desserts</a></li>
+                                <li><a href="#">Beef</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        document.getElementById("add-recipe-form").addEventListener("submit", async (e) => {
+            e.preventDefault(); // Prevent the default form submission behavior
+    
+            const message = document.getElementById("message");
+            message.textContent = "Submitting your recipe...";
+    
+            // Collect data from the form fields
+            const title = document.getElementById("title").value.trim();
+            const description = document.getElementById("description").value.trim();
+            const cookingTime = parseInt(document.getElementById("cooking-time").value.trim());
+            const servings = parseInt(document.getElementById("servings").value.trim());
+            const ingredients = document
+                .getElementById("ingredients")
+                .value.trim()
+                .split(",")
+                .map((item) => ({ name: item.trim() }));
+            const instructions = document
+                .getElementById("instructions")
+                .value.trim()
+                .split(".")
+                .map((step) => step.trim())
+                .filter((step) => step); // Remove empty steps
+    
+            // Build the recipe data object
+            const recipeData = {
+                Title: title,
+                Description: description,
+                CookingTime: cookingTime,
+                Servings: servings,
+                Ingredients: ingredients,
+                Instructions: instructions,
+            };
+    
+            console.log("Submitting recipe data:", recipeData); // For debugging
+    
+            try {
+                const response = await fetch("http://localhost:5000/api/recipes/add", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(recipeData),
+                });
+    
+                if (response.ok) {
+                    message.textContent = "Recipe added successfully. We will review your submission before posting. Thank you!";
+                    document.getElementById("add-recipe-form").reset(); // Clear the form
+                } else {
+                    const data = await response.json();
+                    message.textContent = `Error: ${data.error || "Unknown error"}`;
+                }
+            } catch (error) {
+                console.error("Error adding recipe:", error);
+                message.textContent = "An error occurred while adding the recipe. Please try again.";
+            }
+        });
+    </script>
+    
+    
+    
+
+    <!-- External Scripts -->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/browser.min.js"></script>
+    <script src="assets/js/breakpoints.min.js"></script>
+    <script src="assets/js/util.js"></script>
+    <script src="assets/js/main.js"></script>
+</body>
+</html>
