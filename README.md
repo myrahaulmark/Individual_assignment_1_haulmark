@@ -43,6 +43,14 @@ Welcome to **La Mise en Place**, a recipe database web application designed to m
    - Displays up to six random appetizer recipes.
    - Clicking on a recipe redirects to its detailed view page.
 
+### **Soups Page**
+   - Displays up to six random appetizer recipes.
+   - Clicking on a recipe redirects to its detailed view page.
+
+### **Desserts Page**
+   - Displays up to six random appetizer recipes.
+   - Clicking on a recipe redirects to its detailed view page.
+
 ### **Search by Ingredients**
    - Allows users to input up to three ingredients.
    - Dynamically displays matching recipes as a numbered list.
@@ -54,6 +62,14 @@ Welcome to **La Mise en Place**, a recipe database web application designed to m
      - Title, Image, Category, Ingredients, and Instructions.
      - Reviews, if available.
 
+### **Try Something New Page**
+   - Displays recipes generated from https://www.themealdb.com/api.php
+   - Includes at least 6 recipes randomly generated with photos
+   - Upon clicking on the recipe tile, the user is directed to the recipe details page. The page was initially a test page for using javascript and an API.
+
+### **Submit a Recipe Page**
+   - Directs user to form for recipe submission.
+   
 ---
 
 
