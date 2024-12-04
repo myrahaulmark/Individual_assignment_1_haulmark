@@ -90,29 +90,20 @@
 							<!-- Second Column -->
 							<div class="column">
 								<h3>Create an account or login here (add link)</h3>
-								<form method="post" action="#">
+								<form method="post" action="#" id="create-account-form">
 									<div class="row gtr-uniform">
 										<div class="col-6 col-12-xsmall">
-											<input type="text" name="demo-name" id="demo-name" value="" placeholder="Name" />
+											<input type="text" name="demo-name" id="FirstName" value="" placeholder="First Name" />
 										</div>
 										<div class="col-6 col-12-xsmall">
-											<input type="email" name="demo-email" id="demo-email" value="" placeholder="Email" />
+											<input type="text" name="demo-name" id="LastName" value="" placeholder="Last Name" />
 										</div>
-										<div class="col-12">
-											<select name="demo-category" id="demo-category">
-												<option value="">- Category -</option>
-												<option value="1">Manufacturing</option>
-												<option value="1">Shipping</option>
-												<option value="1">Administration</option>
-												<option value="1">Human Resources</option>
-											</select>
-										</div>
-										<div class="col-12">
-											<textarea name="demo-message" id="demo-message" placeholder="Enter your message" rows="6"></textarea>
+										<div class="col-6 col-12-xsmall">
+											<input type="email" name="demo-email" id="Email" value="" placeholder="Email" />
 										</div>
 										<div class="col-12">
 											<ul class="actions">
-												<li><input type="submit" value="Send Message" class="primary" /></li>
+												<li><input type="submit" value="Create Account" class="primary" /></li>
 												<li><input type="reset" value="Reset" /></li>
 											</ul>
 										</div>
@@ -192,14 +183,12 @@
 					var formData = {
 						'FirstName': $('#FirstName').val(),
 						'LastName': $('#LastName').val(),
-						'Email': $('#Email').val(),
-						'JoinDate': $('#JoinDate').val()
+						'Email': $('#Email').val()
 					};
-
 					// Send data to the Flask API
 					$.ajax({
 						type: "POST",
-						url: "/api/users",  // The Flask API endpoint
+						url: "http://localhost:5000/api/users",  // The Flask API endpoint
 						contentType: "application/json",
 						data: JSON.stringify(formData),
 						success: function(response) {
