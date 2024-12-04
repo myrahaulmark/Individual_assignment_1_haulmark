@@ -80,24 +80,27 @@
                         <div class="column">
 							<h3>Create an account or login:</h3>
 							<form method="post" action="#" id="create-account-form">
-								<div class="row gtr-uniform">
-									<div class="col-6 col-12-xsmall">
-										<input type="text" id="FirstName" placeholder="First Name" required />
-									</div>
-									<div class="col-6 col-12-xsmall">
-										<input type="text" id="LastName" placeholder="Last Name" required />
-									</div>
-									<div class="col-12">
-										<input type="email" id="Email" placeholder="Email" required />
-									</div>
-									<div class="col-12">
-										<ul class="actions">
-											<li><input type="submit" value="Create Account" class="primary" /></li>
-											<li><input type="reset" value="Reset" /></li>
-										</ul>
-									</div>
-								</div>
-							</form>
+                                <div class="row gtr-uniform">
+                                    <div class="col-6 col-12-xsmall">
+                                        <input type="text" id="FirstName" placeholder="First Name" />
+                                    </div>
+                                    <div class="col-6 col-12-xsmall">
+                                        <input type="text" id="LastName" placeholder="Last Name" />
+                                    </div>
+                                    <div class="col-12">
+                                        <input type="email" id="Email" placeholder="Email" />
+                                    </div>
+                                    <!-- Hidden field for JoinDate -->
+                                    <input type="hidden" id="JoinDate" />
+                                    <div class="col-12">
+                                        <ul class="actions">
+                                            <li><input type="submit" value="Create Account" class="primary" /></li>
+                                            <li><input type="reset" value="Reset" /></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </form>
+                            
 						</div>
 						
                     </div>
@@ -162,32 +165,40 @@
 
 		<script> // JAVA SCRIPT FOR USER INPUT
 			$(document).ready(function() {
-				$("#create-account-form").on("submit", function(event) {
-					event.preventDefault(); // Prevent the form from submitting the normal way
-					
-					// Gather form data
-					var formData = {
-						'FirstName': $('#FirstName').val(),
-						'LastName': $('#LastName').val(),
-						'Email': $('#Email').val()
-					};
-					// Send data to the Flask API
-					$.ajax({
-						type: "POST",
-						url: "http://localhost:5000/api/users",  // The Flask API endpoint
-						contentType: "application/json",
-						data: JSON.stringify(formData),
-						success: function(response) {
-							alert("User added successfully! User ID: " + response.UserID);
-							// Reset the form after successful submission
-							$('#create-account-form')[0].reset();
-						},
-						error: function(xhr, status, error) {
-							alert("Error: " + xhr.responseJSON.error);
-						}
-					});
-				});
-			});
+                $("#create-account-form").on("submit", function(event) {
+                    event.preventDefault(); // Prevent the form from submitting normally
+
+                    // Automatically set the JoinDate to the current date in ISO format
+                    const currentDate = new Date().toISOString().split("T")[0]; // Format: YYYY-MM-DD
+                    $("#JoinDate").val(currentDate);
+
+                    // Gather form data
+                    const formData = {
+                        FirstName: $("#FirstName").val(),
+                        LastName: $("#LastName").val(),
+                        Email: $("#Email").val(),
+                        JoinDate: $("#JoinDate").val()
+                    };
+
+                    // Send data to the Flask API
+                    $.ajax({
+                        type: "POST",
+                        url: "http://localhost:5000/api/users", // Flask API endpoint
+                        contentType: "application/json",
+                        data: JSON.stringify(formData),
+                        success: function(response) {
+                            alert("User added successfully! User ID: " + response.UserID);
+                            // Reset the form after successful submission
+                            $("#create-account-form")[0].reset();
+                        },
+                        error: function(xhr, status, error) {
+                            const errorMessage = xhr.responseJSON?.error || "An error occurred";
+                            alert("Error: " + errorMessage);
+                        }
+                    });
+                });
+            });
+
 		</script>
 		
 <!-- AP Java Scripts goes here -->
