@@ -77,29 +77,28 @@
                         </div>
 
                         <!-- Second Column -->
-                        <div class="column">
-							<h3>Create an account or login:</h3>
-							<form method="post" action="#" id="create-account-form">
-                                <div class="row gtr-uniform">
-                                    <div class="col-6 col-12-xsmall">
-                                        <input type="text" id="FirstName" placeholder="First Name" />
-                                    </div>
-                                    <div class="col-6 col-12-xsmall">
-                                        <input type="text" id="LastName" placeholder="Last Name" />
-                                    </div>
-                                    <div class="col-12">
-                                        <input type="email" id="Email" placeholder="Email" />
-                                    </div>
-                                    <!-- Hidden field for JoinDate -->
-                                    <input type="hidden" id="JoinDate" />
-                                    <div class="col-12">
-                                        <ul class="actions">
-                                            <li><input type="submit" value="Create Account" class="primary" /></li>
-                                            <li><input type="reset" value="Reset" /></li>
-                                        </ul>
-                                    </div>
+                        <form method="post" action="#" id="create-account-form">
+                            <div class="row gtr-uniform">
+                                <div class="col-6 col-12-xsmall">
+                                    <input type="text" id="FirstName" placeholder="First Name" />
                                 </div>
-                            </form>
+                                <div class="col-6 col-12-xsmall">
+                                    <input type="text" id="LastName" placeholder="Last Name" />
+                                </div>
+                                <div class="col-12">
+                                    <input type="email" id="Email" placeholder="Email" />
+                                </div>
+                                <div class="col-12">
+                                    <ul class="actions">
+                                        <li><input type="submit" value="Create Account" class="primary" /></li>
+                                        <li><input type="reset" value="Reset" /></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </form>
+                        <!-- Message container -->
+                        <div id="message-container" style="margin-top: 10px;"></div>
+                        
                             
 						</div>
 						
@@ -164,40 +163,43 @@
     </div>
 
 		<script> // JAVA SCRIPT FOR USER INPUT
-			$(document).ready(function() {
-                $("#create-account-form").on("submit", function(event) {
-                    event.preventDefault(); // Prevent the form from submitting normally
+			$(document).ready(function () {
+                $("#create-account-form").on("submit", function (event) {
+                    event.preventDefault(); // Prevent the form from submitting the normal way
 
-                    // Automatically set the JoinDate to the current date in ISO format
-                    const currentDate = new Date().toISOString().split("T")[0]; // Format: YYYY-MM-DD
-                    $("#JoinDate").val(currentDate);
+                    // Clear previous messages
+                    $("#message-container").text("");
 
                     // Gather form data
-                    const formData = {
-                        FirstName: $("#FirstName").val(),
-                        LastName: $("#LastName").val(),
-                        Email: $("#Email").val(),
-                        JoinDate: $("#JoinDate").val()
+                    var formData = {
+                        'FirstName': $('#FirstName').val(),
+                        'LastName': $('#LastName').val(),
+                        'Email': $('#Email').val(),
                     };
 
                     // Send data to the Flask API
                     $.ajax({
                         type: "POST",
-                        url: "http://localhost:5000/api/users", // Flask API endpoint
+                        url: "http://localhost:5000/api/users", // The Flask API endpoint
                         contentType: "application/json",
                         data: JSON.stringify(formData),
-                        success: function(response) {
-                            alert("User added successfully! User ID: " + response.UserID);
-                            // Reset the form after successful submission
-                            $("#create-account-form")[0].reset();
+                        success: function (response) {
+                            // Display success message in the container
+                            $("#message-container").text(`Account created successfully! Your User ID is ${response.UserID}.`);
+                            // Reset the form
+                            $('#create-account-form')[0].reset();
                         },
-                        error: function(xhr, status, error) {
-                            const errorMessage = xhr.responseJSON?.error || "An error occurred";
-                            alert("Error: " + errorMessage);
+                        error: function (xhr) {
+                            // Display error message in the container
+                            const errorMessage = xhr.responseJSON && xhr.responseJSON.error
+                                ? xhr.responseJSON.error
+                                : "An error occurred. Please try again.";
+                            $("#message-container").text(errorMessage).css("color", "red");
                         }
                     });
                 });
             });
+
 
 		</script>
 		
