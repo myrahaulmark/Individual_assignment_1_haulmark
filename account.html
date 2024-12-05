@@ -34,79 +34,6 @@
     <!-- Wrapper -->
     <div id="wrapper">
 
-        <!-- Main -->
-        <div id="main">
-            <div class="inner">
-
-                <!-- Header -->
-                <header id="header">
-                    <a href="index.html" class="logo"><strong>Demo</strong> Recipe Database Web App</a>
-                    <ul class="icons">
-                        <li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
-                        <li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
-                        <li><a href="#" class="icon brands fa-snapchat-ghost"><span class="label">Snapchat</span></a></li>
-                        <li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
-                        <li><a href="#" class="icon brands fa-medium-m"><span class="label">Medium</span></a></li>
-                    </ul>
-                </header>
-
-                <!-- Content -->
-                <section>
-                    <header class="main">
-                        <h1>My Account</h1>
-                    </header>
-
-                    <!-- Two-Column Layout -->
-                    <div class="two-columns">
-                        <!-- First Column -->
-                        <div class="column">
-                            <h2>Welcome to our community!</h2>
-							<h3>Required for account:</h3>
-                            <ul>
-                                <li>First Name</li>
-                                <li>Last Name</li>
-                                <li>Email</li>
-                            </ul>
-                            <h4>Once your account is created, you can add and edit other account features:</h4>
-                            <ul>
-                                <li>Profile name</li>
-                                <li>Favorite categories</li>
-                                <li>Ingredients you avoid</li>
-                                <li>Favorite recipes</li>
-                            </ul>
-                        </div>
-
-                        <!-- Second Column -->
-                        <form method="post" action="#" id="create-account-form">
-                            <div class="row gtr-uniform">
-                                <div class="col-6 col-12-xsmall">
-                                    <input type="text" id="FirstName" placeholder="First Name" />
-                                </div>
-                                <div class="col-6 col-12-xsmall">
-                                    <input type="text" id="LastName" placeholder="Last Name" />
-                                </div>
-                                <div class="col-12">
-                                    <input type="email" id="Email" placeholder="Email" />
-                                </div>
-                                <div class="col-12">
-                                    <ul class="actions">
-                                        <li><input type="submit" value="Create Account" class="primary" /></li>
-                                        <li><input type="reset" value="Reset" /></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </form>
-                        <!-- Message container -->
-                        <div id="message-container" style="margin-top: 10px;"></div>
-                        
-                            
-						</div>
-						
-                    </div>
-                </section>
-            </div>
-        </div>
-
         <!-- Sidebar -->
         <div id="sidebar">
             <div class="inner">
@@ -140,7 +67,7 @@
                     </ul>
                 </nav>
 
-                <!-- Section -->
+                <!-- Contact Section -->
                 <section>
                     <header class="major">
                         <h2>Contact Us</h2>
@@ -160,61 +87,113 @@
                 </footer>
             </div>
         </div>
+
+        <!-- Main -->
+        <div id="main">
+            <div class="inner">
+
+                <!-- Header -->
+                <header id="header">
+                    <a href="index.html" class="logo"><strong>Demo</strong> Recipe Database Web App</a>
+                    <ul class="icons">
+                        <li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
+                        <li><a href="#" class="icon brands fa-facebook"><span class="label">Facebook</span></a></li>
+                        <li><a href="#" class="icon brands fa-snapchat-ghost"><span class="label">Snapchat</span></a></li>
+                        <li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
+                        <li><a href="#" class="icon brands fa-medium-m"><span class="label">Medium</span></a></li>
+                    </ul>
+                </header>
+
+                <!-- Content -->
+                <section>
+                    <header class="main">
+                        <h1>My Account</h1>
+                    </header>
+
+                    <!-- Two-Column Layout -->
+                    <div class="two-columns">
+                        <!-- First Column -->
+                        <div class="column">
+                            <h2>Welcome to our community!</h2>
+                            <h3>Required for account:</h3>
+                            <ul>
+                                <li>First Name</li>
+                                <li>Last Name</li>
+                                <li>Email</li>
+                            </ul>
+                            <h4>Once your account is created, you can add and edit other account features:</h4>
+                            <ul>
+                                <li>Profile name</li>
+                                <li>Favorite categories</li>
+                                <li>Ingredients you avoid</li>
+                                <li>Favorite recipes</li>
+                            </ul>
+                        </div>
+
+                        <!-- Second Column -->
+                        <div class="column">
+                            <h3>Create an account or login:</h3>
+                            <form method="post" action="#" id="create-account-form">
+                                <div class="row gtr-uniform">
+                                    <div class="col-6 col-12-xsmall">
+                                        <input type="text" id="FirstName" placeholder="First Name" />
+                                    </div>
+                                    <div class="col-6 col-12-xsmall">
+                                        <input type="text" id="LastName" placeholder="Last Name" />
+                                    </div>
+                                    <div class="col-12">
+                                        <input type="email" id="Email" placeholder="Email" />
+                                    </div>
+                                    <div class="col-12">
+                                        <ul class="actions">
+                                            <li><input type="submit" value="Create Account" class="primary" /></li>
+                                            <li><input type="reset" value="Reset" /></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </form>
+                            <!-- Message container -->
+                            <div id="message-container" style="margin-top: 10px;"></div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
     </div>
 
-		<script> // JAVA SCRIPT FOR USER INPUT
-			$(document).ready(function () {
-                $("#create-account-form").on("submit", function (event) {
-                    event.preventDefault(); // Prevent the form from submitting the normal way
-
-                    // Clear previous messages
-                    $("#message-container").text("");
-
-                    // Gather form data
-                    var formData = {
-                        'FirstName': $('#FirstName').val(),
-                        'LastName': $('#LastName').val(),
-                        'Email': $('#Email').val(),
-                    };
-
-                    // Send data to the Flask API
-                    $.ajax({
-                        type: "POST",
-                        url: "http://localhost:5000/api/users", // The Flask API endpoint
-                        contentType: "application/json",
-                        data: JSON.stringify(formData),
-                        success: function (response) {
-                            // Display success message in the container
-                            $("#message-container").text(`Account created successfully! Your User ID is ${response.UserID}.`);
-                            // Reset the form
-                            $('#create-account-form')[0].reset();
-                        },
-                        error: function (xhr) {
-                            // Display error message in the container
-                            const errorMessage = xhr.responseJSON && xhr.responseJSON.error
-                                ? xhr.responseJSON.error
-                                : "An error occurred. Please try again.";
-                            $("#message-container").text(errorMessage).css("color", "red");
-                        }
-                    });
+    <script>
+        // JavaScript for form submission
+        $(document).ready(function () {
+            $("#create-account-form").on("submit", function (event) {
+                event.preventDefault();
+                $("#message-container").text("");
+                var formData = {
+                    'FirstName': $('#FirstName').val(),
+                    'LastName': $('#LastName').val(),
+                    'Email': $('#Email').val(),
+                };
+                $.ajax({
+                    type: "POST",
+                    url: "http://localhost:5000/api/users",
+                    contentType: "application/json",
+                    data: JSON.stringify(formData),
+                    success: function (response) {
+                        $("#message-container").text(`Account created successfully! Your User ID is ${response.UserID}.`);
+                        $('#create-account-form')[0].reset();
+                    },
+                    error: function (xhr) {
+                        const errorMessage = xhr.responseJSON && xhr.responseJSON.error ? xhr.responseJSON.error : "An error occurred.";
+                        $("#message-container").text(errorMessage).css("color", "red");
+                    }
                 });
             });
+        });
+    </script>
 
-
-		</script>
-		
-<!-- AP Java Scripts goes here -->
-
-
-
-
- 
-		<!-- Scripts -->
-		<script src="assets/js/jquery.min.js"></script>
-		<script src="assets/js/browser.min.js"></script>
-		<script src="assets/js/breakpoints.min.js"></script>
-		<script src="assets/js/util.js"></script>
-		<script src="assets/js/main.js"></script>
-
-	</body>
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/browser.min.js"></script>
+    <script src="assets/js/breakpoints.min.js"></script>
+    <script src="assets/js/util.js"></script>
+    <script src="assets/js/main.js"></script>
+</body>
 </html>
