@@ -184,13 +184,14 @@
                 // Send data to the Flask API
                 $.ajax({
                     type: "POST",
-                    url: "http://localhost:5000/api/users", // Flask API endpoint
+                    url: "http://localhost:5000/api/users", // The Flask API endpoint
                     contentType: "application/json",
                     data: JSON.stringify(formData),
-                    success: function(response) {
-                        alert("User added successfully! User ID: " + response.UserID);
-                        // Reset the form after successful submission
-                        $("#create-account-form")[0].reset();
+                    success: function (response) {
+                        // Display success message in the container
+                        $("#message-container").html(`<p>Account created successfully! Your User ID is <strong>${response.UserID}</strong>.</p>`).css("color", "green");
+                        // Reset the form
+                        $('#create-account-form')[0].reset();
                     },
                     error: function (xhr) {
                         // Display error message in the container
