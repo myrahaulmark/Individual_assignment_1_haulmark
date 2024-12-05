@@ -90,6 +90,8 @@
                                     <div class="col-12">
                                         <input type="email" id="Email" placeholder="Email" />
                                     </div>
+                                    <!-- Hidden field for JoinDate -->
+                                    <input type="hidden" id="JoinDate" />
                                     <div class="col-12">
                                         <ul class="actions">
                                             <li><input type="submit" value="Create Account" class="primary" /></li>
@@ -163,31 +165,32 @@
 
     <!-- JavaScript for API Integration -->
     <script>
-        $(document).ready(function () {
-            $("#create-account-form").on("submit", function (event) {
-                event.preventDefault(); // Prevent the form from submitting the normal way
+        $(document).ready(function() {
+            $("#create-account-form").on("submit", function(event) {
+                event.preventDefault(); // Prevent the form from submitting normally
 
-                // Clear previous messages
-                $("#message-container").text("");
+                // Automatically set the JoinDate to the current date in ISO format
+                const currentDate = new Date().toISOString().split("T")[0]; // Format: YYYY-MM-DD
+                $("#JoinDate").val(currentDate);
 
                 // Gather form data
-                var formData = {
-                    'FirstName': $('#FirstName').val(),
-                    'LastName': $('#LastName').val(),
-                    'Email': $('#Email').val(),
+                const formData = {
+                    FirstName: $("#FirstName").val(),
+                    LastName: $("#LastName").val(),
+                    Email: $("#Email").val(),
+                    JoinDate: $("#JoinDate").val()
                 };
 
                 // Send data to the Flask API
                 $.ajax({
                     type: "POST",
-                    url: "http://localhost:5000/api/users", // The Flask API endpoint
+                    url: "http://localhost:5000/api/users", // Flask API endpoint
                     contentType: "application/json",
                     data: JSON.stringify(formData),
-                    success: function (response) {
-                        // Display success message in the container
-                        $("#message-container").html(`<p>Account created successfully! Your User ID is <strong>${response.UserID}</strong>.</p>`).css("color", "green");
-                        // Reset the form
-                        $('#create-account-form')[0].reset();
+                    success: function(response) {
+                        alert("User added successfully! User ID: " + response.UserID);
+                        // Reset the form after successful submission
+                        $("#create-account-form")[0].reset();
                     },
                     error: function (xhr) {
                         // Display error message in the container
