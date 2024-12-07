@@ -52,6 +52,13 @@
 							font-size: 1em;
 							color: #333;
 						}
+
+            .loading-indicator {
+                display: none;
+                text-align: center;
+                font-size: 1.2em;
+                color: #333;
+            }
         </style>
     </head>
     <body class="is-preload">
@@ -80,7 +87,7 @@
                         <p>Search by what you have on hand. For example, if you have chicken, lettuce, or squash, use those items as your search terms.</p>
                         <input type="text" id="search-bar" placeholder="Add a maximum of three ingredients like 'chicken, lettuce, salt'..." />
                         <button id="search-button">Search</button>
-
+                        <div class="loading-indicator" id="loading-indicator">Loading...</div>
                         <!-- Search Results -->
                         <ul class="search-results-list" id="search-results">
                             <!-- Recipes will dynamically load here -->
@@ -121,13 +128,16 @@
 			document.getElementById("search-button").addEventListener("click", async () => {
 				const input = document.getElementById("search-bar").value.trim();
 				const resultsContainer = document.getElementById("search-results");
+                const loadingIndicator = document.getElementById("loading-indicator");
 		
 				// Clear previous results
 				resultsContainer.innerHTML = "";
+                loadingIndicator.style.display = "block"; // Show loading indicator
 		
 				// Validate input
 				if (!input) {
 					resultsContainer.innerHTML = "<p>Please enter at least two ingredients.</p>";
+                    loadingIndicator.style.display = "none"; // Hide loading indicator
 					return;
 				}
 		
@@ -135,6 +145,7 @@
 		
 				if (ingredients.length < 2) {
 					resultsContainer.innerHTML = "<p>Please provide at least two ingredients.</p>";
+                    loadingIndicator.style.display = "none"; // Hide loading indicator
 					return;
 				}
 		
@@ -167,7 +178,9 @@
 				} catch (error) {
 					console.error("Error fetching recipes:", error);
 					resultsContainer.innerHTML = "<p>An error occurred while searching for recipes. Please try again later.</p>";
-				}
+				} finally {
+                    loadingIndicator.style.display = "none"; // Hide loading indicator
+                }
 			});
 		</script>
 		
